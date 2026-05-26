@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surf Game - Find Your Wave</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">Find Your Wave</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="game.html" class="active">Game</a></li>
+      <li><a href="form.html">Find My Wave</a></li>
+      <li><a href="checklist.html">Checklist</a></li>
+    </ul>
+    <button class="hamburger" aria-label="메뉴 열기">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Hero (compact) -->
+  <section class="game-hero game-hero-compact">
+    <p class="section-tag">Surf Shooter</p>
+    <h1 class="game-hero-title">Wave Rider</h1>
+  </section>
+
+  <!-- Game -->
+  <div class="game-container">
+    <div class="game-wrapper">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="gameCanvas" width="480" height="720"></canvas>
+        <div class="canvas-overlay-controls">
+          <button class="overlay-btn overlay-btn-fs" id="btnFullscreen" type="button" aria-label="전체화면 토글">
+            <span class="fs-icon-enter">&#9974;</span>
+            <span class="fs-icon-exit">&#9976;</span>
+          </button>
+          <button class="overlay-btn overlay-btn-bomb" id="btnBomb" type="button" aria-label="폭탄">
+            <span>&#128163;</span>
+            <span class="overlay-btn-count" id="btnBombCount">3</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="game-controls">
+        <button class="game-btn game-btn-start" id="startBtn">게임 시작</button>
+        <button class="game-btn game-btn-reset" id="resetBtn">다시하기</button>
+        <button class="game-btn game-btn-pause" id="pauseBtn">일시정지</button>
+        <button class="game-btn game-btn-fullscreen" id="fullscreenBtn">전체화면</button>
+      </div>
+
+      <div class="game-instructions">
+        <details class="help-block">
+          <summary>
+            <span class="help-summary-title">조작법 &amp; 아이템</span>
+            <span class="help-summary-hint">열기 / 닫기</span>
+          </summary>
+
+          <div class="help-grid">
+            <div class="help-card">
+              <div class="help-card-title">이동</div>
+              <div class="help-card-body">
+                <span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span>
+                <span class="help-or">또는</span>
+                <span class="kbd">&#8592;</span><span class="kbd">&#8593;</span><span class="kbd">&#8595;</span><span class="kbd">&#8594;</span>
+                <p class="help-note">모바일: 캔버스를 손가락으로 드래그</p>
+              </div>
+            </div>
+
+            <div class="help-card">
+              <div class="help-card-title">공격</div>
+              <div class="help-card-body">
+                <p class="help-note"><strong>자동 사격</strong> — 항상 켜져 있음</p>
+                <p class="help-note">⭐ 별 아이템 중첩으로 사격 단계 LV1→LV5 상승</p>
+              </div>
+            </div>
+
+            <div class="help-card">
+              <div class="help-card-title">특수기</div>
+              <div class="help-card-body">
+                <span class="kbd">Q</span> <span class="help-or">또는</span> <span class="kbd">&#128163;</span>
+                <p class="help-note"><strong>폭탄</strong> — 모든 적탄 제거 + 화면 내 적 강타</p>
+              </div>
+            </div>
+
+            <div class="help-card">
+              <div class="help-card-title">일시정지</div>
+              <div class="help-card-body">
+                <span class="kbd">P</span> <span class="help-or">또는</span> <span class="kbd">ESC</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="help-items">
+            <span class="help-pill">🐚 조개 = 점수</span>
+            <span class="help-pill">⭐ 별 = 멀티샷 LV↑</span>
+            <span class="help-pill">🔥 래피드 = 연사 가속</span>
+            <span class="help-pill">❤️ 하트 = 체력 회복</span>
+            <span class="help-pill">🛡️ 실드 = 보호막</span>
+            <span class="help-pill">💣 폭탄 = +1 폭탄</span>
+          </div>
+          <p class="help-footnote">매 5레벨마다 <strong>보스 KRAKEN</strong>이 등장합니다.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="footer-logo">Find Your Wave</p>
+    <p class="footer-text">2026 Web Client Computing Team Project</p>
+  </footer>
+
+  <script src="js/game.js"></script>
+  <script>
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    hamburger.addEventListener('click', function () {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('open');
+    });
+    document.querySelectorAll('.nav-links a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('open');
+      });
+    });
+  </script>
+
+</body>
+</html>
