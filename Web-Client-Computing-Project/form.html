@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find My Wave - Find Your Wave</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">Find Your Wave</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="game.html">Game</a></li>
+      <li><a href="form.html" class="active">Find My Wave</a></li>
+      <li><a href="checklist.html">Checklist</a></li>
+    </ul>
+    <button class="hamburger" aria-label="메뉴 열기">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="form-hero">
+    <p class="section-tag">Find My Wave</p>
+    <h1 class="section-title">나만의 파도 찾기</h1>
+    <p class="section-desc">질문에 답하고 당신에게 어울리는 서핑 스타일을 알아보세요</p>
+  </section>
+
+  <!-- Form -->
+  <div class="form-container">
+    <form class="quiz-form" id="waveForm" novalidate>
+
+      <!-- Q1: 이름 -->
+      <div class="form-group">
+        <label><span class="question-number">Q1.</span> 당신의 이름은?</label>
+        <input type="text" class="form-input" id="userName" placeholder="이름을 입력하세요" required>
+        <p class="form-error" id="nameError">이름을 입력해주세요.</p>
+      </div>
+
+      <!-- Q2: 바다에서 하고 싶은 것 -->
+      <div class="form-group">
+        <label><span class="question-number">Q2.</span> 바다에 가면 가장 먼저 하고 싶은 것은?</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="q2" value="adventure" required>
+            <span class="radio-dot"></span>
+            <span class="radio-label">거센 파도에 뛰어들기</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="q2" value="chill">
+            <span class="radio-dot"></span>
+            <span class="radio-label">해변에서 여유롭게 쉬기</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="q2" value="explore">
+            <span class="radio-dot"></span>
+            <span class="radio-label">해안 절벽이나 동굴 탐험하기</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="q2" value="social">
+            <span class="radio-dot"></span>
+            <span class="radio-label">친구들과 비치 발리볼하기</span>
+          </label>
+        </div>
+        <p class="form-error" id="q2Error">하나를 선택해주세요.</p>
+      </div>
+
+      <!-- Q3: 좋아하는 날씨 -->
+      <div class="form-group">
+        <label><span class="question-number">Q3.</span> 선호하는 바다 날씨는?</label>
+        <select class="form-select" id="q3" required>
+          <option value="">선택하세요</option>
+          <option value="storm">폭풍 전야의 거친 바다</option>
+          <option value="sunny">화창하고 잔잔한 바다</option>
+          <option value="sunset">석양이 물드는 바다</option>
+          <option value="misty">안개 낀 신비로운 바다</option>
+        </select>
+        <p class="form-error" id="q3Error">날씨를 선택해주세요.</p>
+      </div>
+
+      <!-- Q4: 성격 -->
+      <div class="form-group">
+        <label><span class="question-number">Q4.</span> 당신의 성격에 가장 가까운 것은?</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="q4" value="bold" required>
+            <span class="radio-dot"></span>
+            <span class="radio-label">도전적이고 대담하다</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="q4" value="calm">
+            <span class="radio-dot"></span>
+            <span class="radio-label">차분하고 여유롭다</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="q4" value="creative">
+            <span class="radio-dot"></span>
+            <span class="radio-label">창의적이고 독특하다</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="q4" value="energetic">
+            <span class="radio-dot"></span>
+            <span class="radio-label">활발하고 사교적이다</span>
+          </label>
+        </div>
+        <p class="form-error" id="q4Error">하나를 선택해주세요.</p>
+      </div>
+
+      <!-- Q5: 음악 -->
+      <div class="form-group">
+        <label><span class="question-number">Q5.</span> 서핑할 때 듣고 싶은 음악은?</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="q5" value="rock" required>
+            <span class="radio-dot"></span>
+            <span class="radio-label">강렬한 록/메탈</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="q5" value="reggae">
+            <span class="radio-dot"></span>
+            <span class="radio-label">레게/보사노바</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="q5" value="electronic">
+            <span class="radio-dot"></span>
+            <span class="radio-label">일렉트로닉/앰비언트</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="q5" value="pop">
+            <span class="radio-dot"></span>
+            <span class="radio-label">팝/힙합</span>
+          </label>
+        </div>
+        <p class="form-error" id="q5Error">하나를 선택해주세요.</p>
+      </div>
+
+      <!-- Q6: 한마디 -->
+      <div class="form-group">
+        <label><span class="question-number">Q6.</span> 바다에게 하고 싶은 한마디</label>
+        <textarea class="form-textarea" id="q6" placeholder="자유롭게 적어주세요 (선택)"></textarea>
+      </div>
+
+      <button type="submit" class="form-submit">나의 파도 찾기</button>
+    </form>
+
+    <!-- Result -->
+    <div class="result-panel" id="resultPanel">
+      <div class="result-wave-icon" id="resultIcon"></div>
+      <h2 class="result-type" id="resultType"></h2>
+      <p class="result-desc" id="resultDesc"></p>
+      <div class="result-traits" id="resultTraits"></div>
+      <button class="result-retry" id="retryBtn">다시 테스트하기</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="footer-logo">Find Your Wave</p>
+    <p class="footer-text">2026 Web Client Computing Team Project</p>
+  </footer>
+
+  <script src="js/form.js"></script>
+  <script>
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    hamburger.addEventListener('click', function () {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('open');
+    });
+    document.querySelectorAll('.nav-links a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('open');
+      });
+    });
+  </script>
+
+</body>
+</html>

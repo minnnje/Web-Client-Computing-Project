@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team - Find Your Wave</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">Find Your Wave</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="team.html" class="active">Team</a></li>
+      <li><a href="game.html">Game</a></li>
+      <li><a href="form.html">Find My Wave</a></li>
+      <li><a href="checklist.html">Checklist</a></li>
+    </ul>
+    <button class="hamburger" aria-label="메뉴 열기">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="team-hero">
+    <p class="section-tag">Our Team</p>
+    <h1 class="section-title">파도를 함께 타는 사람들</h1>
+    <p class="section-desc">각자의 파도를 찾아 나선 우리 팀을 소개합니다</p>
+  </section>
+
+  <!-- Team Grid -->
+  <section class="section">
+    <div class="team-grid">
+
+      <div class="team-card">
+        <div class="team-card-photo">&#127940;</div>
+        <div class="team-card-info">
+          <h3 class="team-card-name">선민제</h3>
+          <p class="team-card-id">20210001 | 소프트웨어학부</p>
+          <span class="team-card-role">팀장 / 기획 & 메인 페이지</span>
+          <p class="team-card-desc">
+            전체 사이트 기획과 메인 페이지 디자인을 담당했습니다. 파도처럼 자유로운 디자인을 추구합니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-card-photo">&#127754;</div>
+        <div class="team-card-info">
+          <h3 class="team-card-name">김건우</h3>
+          <p class="team-card-id">20210002 | 소프트웨어학부</p>
+          <span class="team-card-role">게임 개발</span>
+          <p class="team-card-desc">
+            서핑 게임의 로직과 Canvas 애니메이션을 구현했습니다. 바다 위 모험을 코드로 만들어냅니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-card-photo">&#127758;</div>
+        <div class="team-card-info">
+          <h3 class="team-card-name">박강흠</h3>
+          <p class="team-card-id">20210003 | 소프트웨어학부</p>
+          <span class="team-card-role">폼 페이지 개발</span>
+          <p class="team-card-desc">
+            "Find My Wave" 설문 폼과 결과 로직을 개발했습니다. 사용자 경험을 최우선으로 생각합니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-card-photo">&#127752;</div>
+        <div class="team-card-info">
+          <h3 class="team-card-name">엄유빈</h3>
+          <p class="team-card-id">20210004 | 소프트웨어학부</p>
+          <span class="team-card-role">CSS 디자인 & 반응형</span>
+          <p class="team-card-desc">
+            전체 사이트의 디자인 통일성과 반응형 레이아웃을 담당했습니다. 디테일에 강합니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-card-photo">&#129516;</div>
+        <div class="team-card-info">
+          <h3 class="team-card-name">박재원</h3>
+          <p class="team-card-id">20210005 | 소프트웨어학부</p>
+          <span class="team-card-role">팀원 소개 페이지 & 테스트</span>
+          <p class="team-card-desc">
+            팀원 소개 페이지 제작과 전체 사이트 테스트를 담당했습니다. 꼼꼼한 검수가 장점입니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-card-photo">&#129516;</div>
+        <div class="team-card-info">
+          <h3 class="team-card-name">정지원</h3>
+          <p class="team-card-id">20181691 | 소프트웨어학부</p>
+          <span class="team-card-role">팀원 소개 페이지 & 테스트</span>
+          <p class="team-card-desc">
+            팀원 소개 페이지 제작과 전체 사이트 테스트를 담당했습니다. 꼼꼼한 검수가 장점입니다.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="footer-logo">Find Your Wave</p>
+    <p class="footer-text">2026 Web Client Computing Team Project</p>
+  </footer>
+
+  <script>
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    hamburger.addEventListener('click', function () {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('open');
+    });
+    document.querySelectorAll('.nav-links a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('open');
+      });
+    });
+  </script>
+
+</body>
+</html>
