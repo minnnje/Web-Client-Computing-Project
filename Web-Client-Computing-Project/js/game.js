@@ -70,20 +70,10 @@
   const fullscreenBtn = document.getElementById('fullscreenBtn');
   const canvasWrap = document.getElementById('canvasWrap');
 
-  // ===== Persistence =====
-  // localStorage 키 이름 — 게임 종료 시 최고 점수를 여기에 저장/불러온다.
-  const BEST_KEY = 'waveRiderBestScore';
   let bestScore = 0;
-  try {
-    // 시크릿 모드 등 localStorage 접근이 막힐 수 있으므로 try-catch로 감싼다.
-    const saved = window.localStorage?.getItem(BEST_KEY);
-    if (saved) bestScore = parseInt(saved, 10) || 0;
-  } catch (_) {}
 
   // ===== Beach Guide / Stamp System =====
-  // 획득한 스탬프 ID 배열을 localStorage에 보관한다.
-  const STAMP_KEY = 'waveRiderStamps';
-  let obtainedStamps = []; // 획득한 해변 ID 목록 (예: [1, 3, 5])
+  let obtainedStamps = [];
 
   const BEACH_DATA = [
     { id: 1, img: 'images/양양 서피비치.jpg', name: '양양 서피비치',       location: '강원도 양양군',  emoji: '🏄', color: '#1abc9c', desc: '국내 서핑의 성지. 연중 서퍼들이 찾아오는 강원도 대표 서핑 스팟.',        level: '초급~고급', season: '여름~가을' },
@@ -95,17 +85,12 @@
     { id: 7, img: 'images/태안 만리포 해수욕장.jpg',name: '태안 만리포 해수욕장',location: '충남 태안군',    emoji: '⛵', color: '#e67e22', desc: '서해안 최고의 해수욕장. 독특한 서해 파도의 숨은 서핑 명소.',          level: '중급',      season: '여름~가을' },
   ];
 
+  function saveStamps() {}
+
   function loadStamps() {
-    try {
-      const raw = window.localStorage?.getItem(STAMP_KEY);
-      if (raw) obtainedStamps = JSON.parse(raw) || [];
-    } catch (_) {}
     renderBeachGuide();
   }
 
-  function saveStamps() {
-    try { window.localStorage?.setItem(STAMP_KEY, JSON.stringify(obtainedStamps)); } catch (_) {}
-  }
 
   function collectStamp(beachId) {
     if (obtainedStamps.includes(beachId)) return false;
@@ -134,7 +119,7 @@
   }
 
   function renderBeachGuide() { // 해변 도감 
-    const grid = document.getElementById('beachGuideGrid');
+    const grid = document.getElementById('beachGuideGrid'); // 그리드 
     const counter = document.getElementById('stampCounter');
     if (!grid) return;
     if (counter) counter.textContent = `${obtainedStamps.length} / 7`;
@@ -174,11 +159,10 @@
       paused: false,    // 일시정지 상태인지
       score: 0,
       level: 1,
-      lives: 3,
-      maxLives: 3,
+      lives: 2,
+      maxLives: 2,
       baseSpeed: 2.8,   // 장애물 낙하 기본 속도 (레벨 업 시 증가)
       spawnTimer: 0,    // 장애물 스폰 간격 카운터
-      pickupTimer: 0,   // 하트 아이템 스폰 카운터
       stampTimer: 0,    // 스탬프 아이템 스폰 카운터
       animId: null,     // requestAnimationFrame ID (일시정지/취소에 사용)
       time: 0,          // 총 프레임 수 (애니메이션 타이밍 기준)
@@ -484,11 +468,7 @@
     const cx = p.x;
     const cy = p.y + Math.sin(game.time * 0.1 + p.phase) * 2;
 
-    if (p.type === 'heart') {
-      ctx.fillStyle = 'rgba(231,76,60,0.3)';
-      ctx.beginPath(); ctx.arc(cx, cy, p.size / 2 + 8, 0, Math.PI * 2); ctx.fill();
-      drawHeart(cx, cy, p.size);
-    } else if (p.type === 'stamp') {
+    if (p.type === 'stamp') {
       const r = p.size * 0.52;
 
       // Outer glow
@@ -519,15 +499,6 @@
 
       ctx.textBaseline = 'top';
     }
-  }
-
-  function drawHeart(cx, cy, size) {
-    ctx.fillStyle = '#e74c3c';
-    ctx.beginPath();
-    ctx.moveTo(cx, cy + size / 3);
-    ctx.bezierCurveTo(cx - size / 2, cy - size / 4,      cx - size / 2, cy - size / 1.6, cx, cy - size / 6);
-    ctx.bezierCurveTo(cx + size / 2, cy - size / 1.6,    cx + size / 2, cy - size / 4,   cx, cy + size / 3);
-    ctx.closePath(); ctx.fill();
   }
 
   function drawParticles() {
@@ -681,17 +652,6 @@
     return min + Math.random() * (max - min);
   }
 
-  function spawnPickup() {
-    // Only spawn hearts for life recovery
-    if (game.lives < game.maxLives) {
-      pickups.push({
-        type: 'heart',
-        x: 30 + Math.random() * (CANVAS_W - 60), y: -30,
-        size: 30, vy: game.baseSpeed * 0.65, phase: Math.random() * Math.PI * 2,
-      });
-    }
-  }
-
   function spawnStampPickup() {
     const remaining = BEACH_DATA.filter(b => !obtainedStamps.includes(b.id));
     if (remaining.length === 0) return;
@@ -768,16 +728,7 @@
 
   function collectPickup(p) {
     const { x: cx, y: cy } = p;
-    if (p.type === 'heart') {
-      if (game.lives < game.maxLives) {
-        game.lives++;
-        spawnPopup('+1 LIFE', cx, cy, 'rgba(231,76,60,ALPHA)', 16);
-      } else {
-        addScore(30, cx, cy);
-        spawnPopup('+30', cx, cy, 'rgba(26,188,156,ALPHA)', 14);
-      }
-      spawnParticles(cx, cy, '#e74c3c', 16);
-    } else if (p.type === 'stamp') {
+    if (p.type === 'stamp') {
       const gotNew = collectStamp(p.beachId);
       spawnParticles(cx, cy, '#c0392b', 18, { spread: 6 });
       if (gotNew) {
@@ -793,8 +744,8 @@
     if (surfer.invuln > 0) return; // 무적 시간 중 재피해 방지
     game.lives--;
     surfer.invuln = 100; // 100프레임(약 1.7초) 무적 부여
-    screenShake = 14;    // 화면 흔들림 강도 (매 프레임 0.85배씩 감쇠)
-    damageFlash = 24;    // 빨간 플래시 지속 프레임 수
+    screenShake = 0;
+    damageFlash = 8;
     spawnPopup('MISS!', surfer.x, surfer.y - 22, 'rgba(231,76,60,ALPHA)', 20);
     spawnParticles(surfer.x, surfer.y, '#e74c3c', 20, { spread: 7 });
     if (game.lives <= 0) {
@@ -913,12 +864,7 @@
     startBtn.textContent = '게임 시작';
     pauseBtn.textContent = '일시정지';
     spawnParticles(surfer.x, surfer.y, '#e74c3c', 30, { spread: 8 });
-    try {
-      if (game.score >= bestScore && window.localStorage) {
-        bestScore = game.score;
-        window.localStorage.setItem(BEST_KEY, String(bestScore));
-      }
-    } catch (_) {}
+    if (game.score >= bestScore) bestScore = game.score;
   }
 
   function drawGameOver() {
@@ -972,7 +918,7 @@
 
     ctx.fillStyle = '#e74c3c';
     ctx.font = '400 12px Poppins,sans-serif';
-    ctx.fillText('목숨 ♥♥♥ — 섬에 부딪히면 1개 소진', CANVAS_W / 2, CANVAS_H / 2 + 42);
+    ctx.fillText('목숨 ♥♥ — 섬에 부딪히면 1개 소진', CANVAS_W / 2, CANVAS_H / 2 + 42);
 
     if (bestScore > 0) {
       ctx.fillStyle = '#f39c12';
@@ -1005,7 +951,6 @@
     }
 
     game.spawnTimer++;
-    game.pickupTimer++;
     game.stampTimer++;
 
     // 생존 보너스: 60프레임(약 1초)마다 +2점
@@ -1024,13 +969,6 @@
       } else {
         spawnIsland();
       }
-    }
-
-    // 하트 아이템 스폰 간격: 레벨이 높을수록 자주 등장 (최소 180프레임)
-    const pickupInterval = Math.max(180, 320 - game.level * 10);
-    if (game.pickupTimer >= pickupInterval) {
-      game.pickupTimer = 0;
-      spawnPickup();
     }
 
     // 스탬프 아이템은 8초(480프레임)마다 한 번 스폰된다.
@@ -1071,7 +1009,7 @@
     drawHUD();
 
     if (damageFlash > 0) {
-      ctx.fillStyle = `rgba(231,76,60,${damageFlash / 60})`;
+      ctx.fillStyle = `rgba(231,76,60,${(damageFlash / 8) * 0.25})`;
       ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
       damageFlash--;
     }
@@ -1128,7 +1066,7 @@
     if (isFullscreen()) exitFullscreenIfNeeded(); else enterFullscreen();
   }
 
-  function onFullscreenChange() {
+  function onFullscreenChange() { // 전체화면
     if (isFullscreen()) {
       canvasWrap.classList.add('is-fullscreen');
       fullscreenBtn.textContent = '전체화면 해제';
