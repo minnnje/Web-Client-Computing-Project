@@ -30,15 +30,18 @@
 
 ### 🎮 Surf Game — Wave Rider
 - HTML5 Canvas로 구현된 종스크롤 장애물(섬) 피하기 게임
+
 - 레벨에 따라서 장애물 스폰 주기가 짧아짐 (const spawnInterval = Math.max(22, 60 - game.level * 4);)
+
 - 어떤 장애물 생성할지 랜덤 결정 (Math.random으로 랜덤 실수 생성 후 조건문)
+
 - 섬 크기 랜덤 생성 
-(const sizes = [
+const sizes = [
   { w: 72, h: 58 },
   { w: 100, h: 82 },
   { w: 132, h: 106 },
 ];
-const { w, h } = sizes[Math.floor(Math.random() * sizes.length)];)
+const { w, h } = sizes[Math.floor(Math.random() * sizes.length)];
 
 - 장애물 스폰 좌표 x, y 랜덤
 
@@ -47,10 +50,15 @@ const { w, h } = sizes[Math.floor(Math.random() * sizes.length)];)
 - 충돌 검사 : 라이프 1개 감소
 
 - 장애물에 맞아 라이프 2개가 사라지면 게임 오버
+
 - 캐릭터에서 총알 나오는 기능 삭제
+
 - 키보드(WASD / 방향키) 및 모바일 터치 드래그 조작 지원
+
 - 게임 화면 밑에 잠금 되어있는 총 7종류의 해변 도감이 있음. 스탬프로 해금 가능
-- 스탬프 획득 기능: 지역별 서핑 스팟 및 해변의 사진과 정보를 해금할 수 있는 7종류의 스탬프를 랜덤으로 획득할 수 있음.  ( 객체로 구현 : 획득한 스탬프 ID 배열을 localStorage에 보관)
+
+- 스탬프 획득 기능: 지역별 서핑 스팟 및 해변의 사진과 정보를 해금할 수 있는 7종류의 스탬프를 랜덤으로 획득할 수 있음.  ( 객체로 구현 : 획득한 스탬프 ID 배열을 보관 후 스탬프 획득 시 도감 grid.innerHTML 재생성 )
+
 - 스탬프 디자인: 빨간 원형 스탬프 모양에 stamp 글자가 적혀있음.
 
 

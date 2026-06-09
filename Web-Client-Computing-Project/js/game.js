@@ -70,10 +70,13 @@
   const fullscreenBtn = document.getElementById('fullscreenBtn');
   const canvasWrap = document.getElementById('canvasWrap');
 
+  // ===== Persistence =====
+  // localStorage 키 이름 — 게임 종료 시 최고 점수를 여기에 저장/불러온다.
   let bestScore = 0;
 
   // ===== Beach Guide / Stamp System =====
-  let obtainedStamps = [];
+  const STAMP_KEY = 'waveRiderStamps';
+  let obtainedStamps = []; // 획득한 해변 ID 목록 (예: [1, 3, 5])
 
   const BEACH_DATA = [
     { id: 1, img: 'images/양양 서피비치.jpg', name: '양양 서피비치',       location: '강원도 양양군',  emoji: '🏄', color: '#1abc9c', desc: '국내 서핑의 성지. 연중 서퍼들이 찾아오는 강원도 대표 서핑 스팟.',        level: '초급~고급', season: '여름~가을' },
@@ -85,12 +88,11 @@
     { id: 7, img: 'images/태안 만리포 해수욕장.jpg',name: '태안 만리포 해수욕장',location: '충남 태안군',    emoji: '⛵', color: '#e67e22', desc: '서해안 최고의 해수욕장. 독특한 서해 파도의 숨은 서핑 명소.',          level: '중급',      season: '여름~가을' },
   ];
 
-  function saveStamps() {}
-
   function loadStamps() {
     renderBeachGuide();
   }
 
+  function saveStamps() {}
 
   function collectStamp(beachId) {
     if (obtainedStamps.includes(beachId)) return false;
@@ -119,7 +121,7 @@
   }
 
   function renderBeachGuide() { // 해변 도감 
-    const grid = document.getElementById('beachGuideGrid'); // 그리드 
+    const grid = document.getElementById('beachGuideGrid');
     const counter = document.getElementById('stampCounter');
     if (!grid) return;
     if (counter) counter.textContent = `${obtainedStamps.length} / 7`;
@@ -150,7 +152,6 @@
   // ===== Game State =====
   // 매 게임 시작마다 initState()로 초기화되는 전역 상태 변수들
   let game, surfer, islands, pickups, particles, popups, foamLines;
-  let screenShake, damageFlash;
 
   function initState() {
     game = {
@@ -192,8 +193,6 @@
     pickups = [];
     particles = [];
     popups = [];
-    screenShake = 0;
-    damageFlash = 0;
 
     // 배경에 흐르는 흰 거품 줄기 18개 — 바다 느낌을 살리는 장식 효과
     foamLines = Array.from({ length: 18 }, () => ({
@@ -324,6 +323,8 @@
     const targetTilt = Math.max(-0.35, Math.min(0.35, surfer.vx * 0.06));
     surfer.tilt += (targetTilt - surfer.tilt) * 0.18;
 
+    if (surfer.invuln > 0 && Math.floor(surfer.invuln / 10) % 2 === 0) return;
+
     ctx.save();
     ctx.translate(surfer.x, surfer.y + bob);
     ctx.rotate(surfer.tilt);
@@ -359,12 +360,6 @@
     ctx.fillStyle = '#2c3e50';
     ctx.fillRect(-6, 12, 4, 12);
     ctx.fillRect(2, 12, 4, 12);
-
-    // Invuln flash
-    if (surfer.invuln > 0 && Math.floor(surfer.invuln / 4) % 2 === 0) {
-      ctx.fillStyle = 'rgba(255,255,255,0.4)';
-      ctx.beginPath(); ctx.ellipse(0, 0, 22, 36, 0, 0, Math.PI * 2); ctx.fill();
-    }
 
     ctx.restore();
   }
@@ -743,11 +738,8 @@
   function damagePlayer() {
     if (surfer.invuln > 0) return; // 무적 시간 중 재피해 방지
     game.lives--;
-    surfer.invuln = 100; // 100프레임(약 1.7초) 무적 부여
-    screenShake = 0;
-    damageFlash = 8;
+    surfer.invuln = 60;
     spawnPopup('MISS!', surfer.x, surfer.y - 22, 'rgba(231,76,60,ALPHA)', 20);
-    spawnParticles(surfer.x, surfer.y, '#e74c3c', 20, { spread: 7 });
     if (game.lives <= 0) {
       game.lives = 0;
       gameOver();
@@ -981,18 +973,7 @@
     updateIslands();
     updatePickups();
 
-    // 피격 시 screenShake를 0.85배씩 감쇠시켜 자연스럽게 흔들림이 가라앉는다.
-    let shakeX = 0, shakeY = 0;
-    if (screenShake > 0) {
-      shakeX = (Math.random() - 0.5) * screenShake;
-      shakeY = (Math.random() - 0.5) * screenShake;
-      screenShake *= 0.85;
-      if (screenShake < 0.4) screenShake = 0;
-    }
-
     applyRenderTransform();
-    ctx.save();
-    ctx.translate(shakeX, shakeY);
 
     drawBackground();
 
@@ -1007,14 +988,6 @@
     drawSurfer();
     drawPopups();
     drawHUD();
-
-    if (damageFlash > 0) {
-      ctx.fillStyle = `rgba(231,76,60,${(damageFlash / 8) * 0.25})`;
-      ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
-      damageFlash--;
-    }
-
-    ctx.restore();
 
     game.animId = requestAnimationFrame(gameLoop);
   }
@@ -1066,7 +1039,7 @@
     if (isFullscreen()) exitFullscreenIfNeeded(); else enterFullscreen();
   }
 
-  function onFullscreenChange() { // 전체화면
+  function onFullscreenChange() {
     if (isFullscreen()) {
       canvasWrap.classList.add('is-fullscreen');
       fullscreenBtn.textContent = '전체화면 해제';
