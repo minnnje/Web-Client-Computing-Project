@@ -7,10 +7,10 @@ html {
     width: 100%;
     height: 200vh;
     font-family: 'Poppins', 'Pretendard', 'Noto Sans KR', Arial, sans-serif;
-    background-color: #0072FF;
+    background: linear-gradient(160deg,  #01BCFF 0%, #0072FF 40%, #0025AA 80%);
     overflow-x: hidden;
     scroll-behavior: smooth;
-    transition: background-color 0.8s ease;
+    transition: background 0.8s ease;
 }
 
 body.scrolled {
@@ -31,7 +31,7 @@ nav {
     align-items: center;
     gap: 44px;
 
-    color: #0072FF;
+    color: #0071FF;;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-16px);
@@ -61,7 +61,7 @@ nav a {
 }
 
 nav a:hover {
-    color: #00BBFF;
+    color: #0025AA;
 }
 
 
@@ -174,7 +174,7 @@ body.scrolled .content-section {
 
 .content-section h1 {
     margin: 0;
-    font-family: 'OK�⑤떒泥�', 'Ok�⑤떒泥�', 'OKDDung', 'Pretendard', 'Noto Sans KR', Arial, sans-serif;
+    font-family: 'Poppins', 'OKDDung', 'Pretendard', 'Noto Sans KR', Arial, sans-serif;
     font-size: clamp(3.4rem, 7.6vw, 5.8rem);
     line-height: 1.05;
     font-weight: 900;
@@ -390,7 +390,7 @@ body.scrolled .explore-section {
 
 .menu-card:hover h3,
 .menu-card:hover span {
-    color: #00BBFF;
+    color: #0025aa;
 }
 
 .menu-card:hover span {
@@ -533,15 +533,12 @@ body.scrolled .explore-section {
 }
 
 .beach-gallery {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 28px;
+    width: min(1120px, 100%);
+    margin-inline: auto;
     text-align: left;
-}
-
-.beach-gallery .gallery-card {
-    width: min(67%, 860px);
 }
 
 .gallery-card {
@@ -563,7 +560,7 @@ body.scrolled .explore-section {
 .gallery-card img {
     display: block;
     width: 100%;
-    height: 720px;
+    height: 360px;
     object-fit: cover;
 }
 
@@ -586,14 +583,13 @@ body.scrolled .explore-section {
     word-break: keep-all;
 }
 
-@media (max-width: 600px) {
-    .gallery-card {
-        flex-direction: column;
+@media (max-width: 700px) {
+    .beach-gallery {
+        grid-template-columns: 1fr;
     }
 
     .gallery-card img {
-        width: 100%;
-        height: 200px;
+        height: 240px;
     }
 
     .about-section {

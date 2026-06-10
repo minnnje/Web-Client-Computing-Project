@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800;900&display=swap');
 
 :root {
-  --navy: #071a4d;
+  --navy: #0025aa;
   --blue: #0878df;
   --sky: #20c3ef;
   --coral: #ff4a32;
@@ -104,10 +104,11 @@ button:hover {
 .game-card,
 .dex-card {
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(0, 114, 255, 0.18);
   border-radius: 8px;
-  background:  #01BCFF;
+  background-color: white;
   box-shadow: 0 18px 44px rgba(8, 120, 223, 0.14);
+
 }
 
 .top-bar {
@@ -116,13 +117,13 @@ button:hover {
   justify-content: space-between;
   gap: 16px;
   padding: 22px;
-  color: #ffffff;
-  background: #0025AA;
+  color: #0025aa;
+  background: white;
 }
 
 .eyebrow {
   margin: 0 0 8px;
-  color: #d9f6ff;
+  color: #0025aa;
   font-size: 0.78rem;
   font-weight: 900;
   letter-spacing: 0.16em;
@@ -157,6 +158,7 @@ h1 {
   font-size: 0.82rem;
   font-weight: 800;
   background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(8, 120, 223, 0.18);
 }
 
 .info-row strong {
@@ -197,6 +199,7 @@ canvas {
   grid-column: 1;
 }
 
+
 .overlay h2 {
   align-self: end;
   margin: 0 0 6px;
@@ -208,7 +211,7 @@ canvas {
   max-width: 280px;
   margin: 0;
   line-height: 1.6;
-  font-weight: 800;
+  font-weight: 400;
 }
 
 .overlay button {
@@ -246,7 +249,7 @@ canvas {
 .dex-title p {
   max-width: 360px;
   margin: 0;
-  color: var(--muted);
+  color: var(--navy);
   line-height: 1.5;
   text-align: right;
 }
