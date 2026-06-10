@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist | 대한민국 서핑 가이드</title>
+  <link rel="stylesheet" href="../assets/css/shared.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">Find Your Wave</a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="team.html">Team</a>
+      <a href="game.html">Game</a>
+      <a href="form.html">Find</a>
+      <a class="active" href="checklist.html">Checklist</a>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <section class="page-title">
+      <p class="eyebrow">Beach Trip Checklist</p>
+      <h1>해변 여행 준비물 체크리스트</h1>
+      <p>여행 유형을 고르고 필요한 물건을 체크하세요. 직접 항목을 추가할 수도 있습니다.</p>
+    </section>
+
+    <section class="check-layout">
+      <aside class="theme-list" aria-label="여행 유형 선택">
+        <button class="theme-btn is-selected" data-theme="surf" type="button">A. 서핑 당일치기</button>
+        <button class="theme-btn" data-theme="healing" type="button">B. 힐링 바캉스</button>
+        <button class="theme-btn" data-theme="overnight" type="button">C. 1박 2일 여행</button>
+      </aside>
+
+      <section class="check-panel">
+        <h2 id="theme-title">서핑 당일치기</h2>
+        <div class="progress" aria-label="체크 진행률"><span id="progress-bar"></span></div>
+        <ul class="check-list" id="check-list"></ul>
+
+        <div class="add-row">
+          <input id="new-item" type="text" placeholder="내 항목 추가">
+          <button class="small-btn" id="add-btn" type="button">추가</button>
+        </div>
+        <div class="panel-actions">
+          <button class="small-btn danger-btn" id="clear-done" type="button">완료 항목 지우기</button>
+          <button class="small-btn" id="reset-btn" type="button">초기화</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="../assets/js/checklist.js"></script>
+</body>
+</html>

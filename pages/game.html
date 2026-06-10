@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surf Stamp Adventure | 대한민국 서핑 가이드</title>
+  <link rel="stylesheet" href="../assets/css/shared.css">
+  <link rel="stylesheet" href="../assets/css/game.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">Find Your Wave</a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="team.html">Team</a>
+      <a class="active" href="game.html">Game</a>
+      <a href="form.html">Find</a>
+      <a href="checklist.html">Checklist</a>
+    </nav>
+  </header>
+
+  <main class="app">
+    <section class="game-card">
+      <header class="top-bar">
+        <div>
+          <p class="eyebrow">SCORE LEVEL BEST LIFE</p>
+          <h1>해변 도감 스탬프 게임</h1>
+        </div>
+        <button id="restartBtn" type="button">start</button>
+      </header>
+
+      <div class="info-row">
+        <span>점수 <strong id="scoreText">0</strong></span>
+        <span>레벨 <strong id="levelText">1</strong></span>
+        <span>최고 <strong id="bestText">0</strong></span>
+        <span>라이프 <strong id="lifeText">3</strong></span>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="gameCanvas" width="420" height="620" aria-label="종스크롤 장애물 피하기 게임"></canvas>
+        <div id="startOverlay" class="overlay">
+          <h2>나만의 파도 찾기</h2>
+          <p>섬을 피해 오래 버티면 랜덤 스탬프를 얻어요.</p>
+          <button id="startBtn" type="button">start</button>
+        </div>
+        <div id="gameOverOverlay" class="overlay hidden">
+          <h2>GAME OVER</h2>
+          <p id="resultText">점수 0</p>
+          <button id="againBtn" type="button">다시 시작</button>
+        </div>
+      </div>
+
+      <p class="control-guide">조작: WASD / 방향키 / 모바일 터치 드래그</p>
+    </section>
+
+    <section class="dex-card">
+      <div class="dex-title">
+        <h2>해변 도감</h2>
+        <p>잠금 해제된 지역별 서핑 스팟과 해변 정보</p>
+      </div>
+      <div id="stampMessage" class="stamp-message">파도를 타며 섬을 피해 보세요!</div>
+      <div id="beachGrid" class="beach-grid"></div>
+      <button id="resetStampBtn" class="sub-btn" type="button">도감 초기화</button>
+    </section>
+  </main>
+
+  <script src="../assets/js/game.js"></script>
+</body>
+</html>

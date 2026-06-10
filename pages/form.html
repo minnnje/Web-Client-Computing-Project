@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find My Wave | 대한민국 서핑 가이드</title>
+  <link rel="stylesheet" href="../assets/css/shared.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">Find Your Wave</a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="team.html">Team</a>
+      <a href="game.html">Game</a>
+      <a class="active" href="form.html">Find</a>
+      <a href="checklist.html">Checklist</a>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <section class="page-title">
+      <p class="eyebrow">Find My Wave</p>
+      <h1>나만의 파도 찾기</h1>
+      <p>여행 목적과 성향을 선택하면 어울리는 서핑 스타일과 국내 해변 후보를 추천합니다.</p>
+    </section>
+
+    <section class="form-panel">
+      <div class="question" data-question="mood">
+        <h2>1. 이번 여행에서 가장 원하는 분위기는?</h2>
+        <div class="choice-grid">
+          <button class="choice-card" data-value="active" type="button">액티브하게 즐기기</button>
+          <button class="choice-card" data-value="healing" type="button">조용히 쉬기</button>
+          <button class="choice-card" data-value="social" type="button">사람들과 어울리기</button>
+        </div>
+      </div>
+
+      <div class="question" data-question="skill">
+        <h2>2. 서핑 경험은 어느 정도인가요?</h2>
+        <div class="choice-grid">
+          <button class="choice-card" data-value="beginner" type="button">처음 또는 초보</button>
+          <button class="choice-card" data-value="middle" type="button">몇 번 타봤음</button>
+          <button class="choice-card" data-value="challenge" type="button">도전적인 파도 선호</button>
+        </div>
+      </div>
+
+      <div class="question" data-question="place">
+        <h2>3. 선호하는 해변 환경은?</h2>
+        <div class="choice-grid">
+          <button class="choice-card" data-value="city" type="button">접근성 좋은 도심형</button>
+          <button class="choice-card" data-value="nature" type="button">자연 풍경 중심</button>
+          <button class="choice-card" data-value="hotspot" type="button">유명 서핑 스팟</button>
+        </div>
+      </div>
+
+      <button class="small-btn" id="result-btn" type="button">결과 보기</button>
+
+      <article class="result-card" id="result-card" hidden>
+        <h2 id="result-title"></h2>
+        <p id="result-desc"></p>
+        <div class="spot-grid" id="spot-grid"></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="../assets/js/form.js"></script>
+</body>
+</html>
