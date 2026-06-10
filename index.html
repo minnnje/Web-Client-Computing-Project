@@ -1,58 +1,104 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>대한민국 서핑 가이드</title>
-  <link rel="stylesheet" href="assets/css/shared.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대한민국 서핑 가이드 | 팀 Surfer</title>
+    <link rel="stylesheet" href="assets/css/index.css">
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="index.html">Find Your Wave</a>
-    <nav class="nav-links" aria-label="주요 메뉴">
-      <a href="pages/team.html">Team</a>
-      <a href="pages/game.html">Game</a>
-      <a href="pages/form.html">Find</a>
-      <a href="pages/checklist.html">Checklist</a>
+    <nav id="main-nav">
+        
     </nav>
-  </header>
 
-  <main class="shell home-shell">
-    <section class="hero-panel">
-      <p class="eyebrow">Korea Surfing Guide</p>
-      <h1>당신의 파도를 찾아보세요</h1>
-      <p>
-        국내 서핑 명소와 해변 여행 준비를 한 곳에서 확인하고,
-        간단한 테스트와 게임으로 나만의 여름 코스를 완성합니다.
-      </p>
-      <div class="hero-actions">
-        <a class="primary-btn" href="pages/form.html">파도 찾기</a>
-        <a class="ghost-btn" href="pages/game.html">게임 시작</a>
-      </div>
+    <div class="wave-wrapper" id="wave-container">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                <use href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use href="#gentle-wave" x="48" y="7" fill="#fff" />
+            </g>
+        </svg>
+        <div class="wave-filler"></div>
+    </div>
+
+    <section class="content-section" id="hero-text">
+        <p class="hero-kicker">Ride the moment</p>
+
+        <h1>Find Your Wave</h1>
+
+        <p class="hero-desc">
+            파도 위에서 나를 발견하는 여정.        </p>
+
+        <p class="team-name">Team Surfer</p>
+
+        <button id="explore-btn" class="explore-btn" type="button">
+            탐험 시작하기
+        </button>
     </section>
 
-    <section class="menu-grid" aria-label="페이지 바로가기">
-      <a class="feature-card coral" href="pages/team.html">
-        <span>01</span>
-        <h2>Team</h2>
-        <p>팀원 역할과 각자의 여름 취향을 소개합니다.</p>
-      </a>
-      <a class="feature-card cyan" href="pages/game.html">
-        <span>02</span>
-        <h2>Surf Game</h2>
-        <p>장애물을 피하며 조개를 모으는 간단한 키보드 게임입니다.</p>
-      </a>
-      <a class="feature-card blue" href="pages/form.html">
-        <span>03</span>
-        <h2>Find My Wave</h2>
-        <p>취향을 선택하면 어울리는 서핑 스타일과 해변을 추천합니다.</p>
-      </a>
-      <a class="feature-card cream" href="pages/checklist.html">
-        <span>04</span>
-        <h2>Checklist</h2>
-        <p>여행 준비물을 체크하고 직접 항목을 추가할 수 있습니다.</p>
-      </a>
+    <section id="menu-buttons" class="explore-section" aria-label="연결 페이지 메뉴">
+        <p class="section-kicker">EXPLORE</p>
+
+        <h2 class="menu-title">당신의 파도를 찾아보세요</h2>
+
+        <p class="menu-subtitle">
+            "Find Your Wave"로 서핑을 체험하고, 국내 다양한 해변 명소들과 나만의 서핑 스타일을 발견해보세요.
+        </p>
+
+        <div class="card-grid">
+            <a class="menu-card" href="pages/team.html">
+                <h3>Team</h3>
+                <p>프로젝트를 함께 만든 팀원들을 소개합니다.</p>
+                <span>팀원 소개 →</span>
+            </a>
+
+            <a class="menu-card" href="pages/game.html">
+                <h3>Surf Game</h3>
+                <p>파도를 타며 장애물을 피하고 조개를 모으는 서핑 게임에 도전하세요.</p>
+                <span>시작하기 →</span>
+            </a>
+
+            <a class="menu-card" href="pages/form.html">
+                <h3>Find Your Wave</h3>
+                <p>간단한 질문에 답하고 나에게 어울리는 서핑 스타일과 파도를 알아보세요.</p>
+                <span>테스트하기 →</span>
+            </a>
+
+            <a class="menu-card" href="pages/checklist.html">
+                <h3>Checklist</h3>
+                <p>서핑 여행 전 빠뜨린 준비물이 없는지 여행 모드에 맞춰 확인해보세요.</p>
+                <span>확인하기 →</span>
+            </a>
+        </div>
+
+        <section class="about-section" id="about" aria-label="국내 서핑 해변 소개">
+            <p class="section-kicker">ABOUT</p>
+            <h2 class="about-title">국내 서핑 해변 소개</h2>
+            <p class="about-subtitle">파도를 즐기기 좋은 대한민국 대표 해변들을 만나보세요</p>
+            <div class="beach-gallery">
+                <article class="gallery-card">
+                    <img src="assets/images/해운대 해수욕장.jpg" alt="해운대 해수욕장" loading="lazy">
+                    <div class="gallery-info">
+                        <h3>해운대 해수욕장</h3>
+                        <p>부산을 대표하는 국내 최대 규모의 해수욕장으로, 초보자부터 숙련된 서퍼까지 모두가 즐길 수 있는 최고의 서핑 스팟입니다.<br>주변에 서핑 스쿨과 장비 대여점이 밀집해 있어 언제든 손쉽게 서핑을 체험할 수 있습니다.</p>
+                    </div>
+                </article>
+                <article class="gallery-card">
+                    <img src="assets/images/협재 해변.jpg" alt="협재 해변" loading="lazy">
+                    <div class="gallery-info">
+                        <h3>협재 해변</h3>
+                        <p>제주도의 투명한 에메랄드빛 바다와 새하얀 산호 백사장이 펼쳐지는 아름다운 해변으로, 완만한 파도 덕분에 서핑 입문자에게 특히 인기가 높습니다.<br>해변 앞 비양도의 이국적인 풍경과 황금빛 낙조가 어우러져 서핑 이후에도 특별한 시간을 선사합니다.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
     </section>
-  </main>
+
+    <script src="assets/js/index.js"></script>
 </body>
 </html>
