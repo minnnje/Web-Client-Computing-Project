@@ -17,34 +17,56 @@
     </nav>
   </header>
 
-  <main class="shell">
-    <section class="page-title">
-      <p class="eyebrow">Beach Trip Checklist</p>
-      <h1>해변 여행 준비물 체크리스트</h1>
-      <p>여행 유형을 고르고 필요한 물건을 체크하세요. 직접 항목을 추가할 수도 있습니다.</p>
+  <main class="shell checklist-shell">
+    <section class="packing-hero">
+      <div>
+        <p class="eyebrow">Beach Packing</p>
+        <h1>바다 가기 전 체크</h1>
+        <p>떠나기 전, 빠뜨린 준비물이 없는지 여행 모드에 맞춰 확인해보세요.</p>
+      </div>
+      <div class="hero-badge" aria-hidden="true">wave ready</div>
     </section>
 
-    <section class="check-layout">
-      <aside class="theme-list" aria-label="여행 유형 선택">
-        <button class="theme-btn is-selected" data-theme="surf" type="button">A. 서핑 당일치기</button>
-        <button class="theme-btn" data-theme="healing" type="button">B. 힐링 바캉스</button>
-        <button class="theme-btn" data-theme="overnight" type="button">C. 1박 2일 여행</button>
-      </aside>
+    <section class="mode-section" aria-label="여행 모드 선택">
+      <button class="theme-btn is-selected" data-theme="surf" type="button">
+        <span class="mode-icon">Surf</span>
+        <strong>서핑 데이</strong>
+        <em>파도를 탈 준비</em>
+      </button>
+      <button class="theme-btn" data-theme="healing" type="button">
+        <span class="mode-icon">Rest</span>
+        <strong>힐링 비치</strong>
+        <em>쉬어가는 하루</em>
+      </button>
+      <button class="theme-btn" data-theme="overnight" type="button">
+        <span class="mode-icon">Stay</span>
+        <strong>1박 여행</strong>
+        <em>가볍게 떠나는 바다</em>
+      </button>
+    </section>
 
-      <section class="check-panel">
-        <h2 id="theme-title">서핑 당일치기</h2>
-        <div class="progress" aria-label="체크 진행률"><span id="progress-bar"></span></div>
-        <ul class="check-list" id="check-list"></ul>
+    <section class="check-panel">
+      <div class="check-panel-head">
+        <div>
+          <p class="eyebrow">Today Status</p>
+          <h2 id="theme-title">서핑 데이</h2>
+        </div>
+        <p class="progress-count" id="progress-count">0 / 0 완료</p>
+      </div>
 
-        <div class="add-row">
-          <input id="new-item" type="text" placeholder="내 항목 추가">
-          <button class="small-btn" id="add-btn" type="button">추가</button>
-        </div>
-        <div class="panel-actions">
-          <button class="small-btn danger-btn" id="clear-done" type="button">완료 항목 지우기</button>
-          <button class="small-btn" id="reset-btn" type="button">초기화</button>
-        </div>
-      </section>
+      <p class="status-message" id="status-message">천천히 챙겨볼까요?</p>
+      <div class="progress" aria-label="체크 진행률"><span id="progress-bar"></span></div>
+
+      <ul class="check-list" id="check-list"></ul>
+
+      <div class="add-row">
+        <input id="new-item" type="text" placeholder="내 준비물 추가">
+        <button class="small-btn" id="add-btn" type="button">추가</button>
+      </div>
+      <div class="panel-actions">
+        <button class="small-btn danger-btn" id="clear-done" type="button">완료 항목 정리</button>
+        <button class="small-btn reset-btn" id="reset-btn" type="button">처음으로</button>
+      </div>
     </section>
   </main>
 
