@@ -94,8 +94,21 @@
 
       <article class="result-card" id="result-card" hidden>
         <p class="result-kicker">Your Wave Report</p>
-        <h2 id="result-title"></h2>
-        <p id="result-desc"></p>
+        <div class="result-head">
+          <div>
+            <h2 id="result-title"></h2>
+            <p id="result-desc"></p>
+          </div>
+          <div class="match-meter" aria-label="추천 매칭률">
+            <span id="match-rate">0%</span>
+            <small>match</small>
+          </div>
+        </div>
+        <div class="match-bar" aria-hidden="true"><span id="match-bar"></span></div>
+        <div class="answer-summary">
+          <strong>당신의 선택</strong>
+          <div id="answer-summary-list"></div>
+        </div>
         <div class="keyword-row" id="keyword-row"></div>
         <div class="spot-grid" id="spot-grid"></div>
         <div class="result-actions">

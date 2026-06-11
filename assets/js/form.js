@@ -7,6 +7,9 @@ const nextBtn = document.getElementById("next-btn");
 const resultCard = document.getElementById("result-card");
 const resultTitle = document.getElementById("result-title");
 const resultDesc = document.getElementById("result-desc");
+const matchRate = document.getElementById("match-rate");
+const matchBar = document.getElementById("match-bar");
+const answerSummaryList = document.getElementById("answer-summary-list");
 const keywordRow = document.getElementById("keyword-row");
 const spotGrid = document.getElementById("spot-grid");
 const restartTestBtn = document.getElementById("restart-test-btn");
@@ -58,6 +61,18 @@ const scoring = {
   hotspot: "active",
 };
 
+const answerLabels = {
+  active: "액티브",
+  healing: "힐링",
+  social: "소셜",
+  beginner: "처음이에요",
+  middle: "몇 번 타봤어요",
+  challenge: "도전하고 싶어요",
+  city: "도심형",
+  nature: "자연형",
+  hotspot: "핫스팟",
+};
+
 function getCurrentQuestionKey() {
   return questions[currentStep].dataset.question;
 }
@@ -87,26 +102,49 @@ function selectChoice(button) {
   nextBtn.disabled = false;
 }
 
-function getResultKey() {
+function getScore() {
   const score = { active: 0, healing: 0, social: 0 };
 
   Object.values(answers).forEach((value) => {
     score[scoring[value]] += 1;
   });
 
-  return Object.entries(score).sort((a, b) => b[1] - a[1])[0][0];
+  return score;
+}
+
+function getResultKey() {
+  return Object.entries(getScore()).sort((a, b) => b[1] - a[1])[0][0];
+}
+
+function getMatchPercent(resultKey) {
+  const score = getScore();
+  const base = Math.round((score[resultKey] / questions.length) * 100);
+  return Math.min(96, Math.max(72, base + 8));
 }
 
 function showResult() {
-  const result = results[getResultKey()];
+  const resultKey = getResultKey();
+  const result = results[resultKey];
+  const percent = getMatchPercent(resultKey);
+
   resultTitle.textContent = `당신의 파도는 "${result.title}"`;
   resultDesc.textContent = result.desc;
-  keywordRow.innerHTML = result.keywords.map((keyword) => `<span>#${keyword}</span>`).join("");
-  spotGrid.innerHTML = result.spots.map(([name, desc]) => (
-    `<div class="spot"><strong>${name}</strong><span>${desc}</span></div>`
+  matchRate.textContent = `${percent}%`;
+  matchBar.style.width = "0%";
+  answerSummaryList.innerHTML = Object.values(answers).map((answer) => (
+    `<span>${answerLabels[answer]}</span>`
+  )).join("");
+  keywordRow.innerHTML = result.keywords.map((keyword, index) => (
+    `<span style="--delay:${index * 70}ms">#${keyword}</span>`
+  )).join("");
+  spotGrid.innerHTML = result.spots.map(([name, desc], index) => (
+    `<div class="spot" style="--delay:${index * 90}ms"><strong>${name}</strong><span>${desc}</span></div>`
   )).join("");
 
   resultCard.hidden = false;
+  requestAnimationFrame(() => {
+    matchBar.style.width = `${percent}%`;
+  });
   resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
