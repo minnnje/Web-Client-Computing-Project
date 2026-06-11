@@ -126,6 +126,23 @@ p {
   border-radius: 50% 50% 0 0;
   background: rgba(255, 255, 255, 0.94);
 }
+.page-title  > p{
+  color: var(--muted);
+}
+
+.page-title  > p:nth-child(2){
+  color: #0025aa;
+  font-size: 43px;
+  font-weight: 600;
+  margin: 0px;
+}
+
+.page-title  > p:nth-child(3){
+  margin-bottom: 34px;
+}
+
+
+
 
 .find-hero > * {
   position: relative;
@@ -287,7 +304,7 @@ p {
 .choice-card span {
   color: var(--muted);
   font-size: 0.95rem;
-  font-weight: 800;
+  font-weight: 500;
   line-height: 1.55;
 }
 
@@ -319,7 +336,7 @@ p {
 
 .secondary-btn {
   color: var(--navy);
-  background: var(--cream);
+  background: #ff4a32;
 }
 
 .small-btn:disabled,
