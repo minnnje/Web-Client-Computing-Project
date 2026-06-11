@@ -17,47 +17,91 @@
     </nav>
   </header>
 
-  <main class="shell">
-    <section class="page-title">
+  <main class="shell find-shell">
+    <section class="find-hero">
       <p class="eyebrow">Find My Wave</p>
-      <h1>나만의 파도 찾기</h1>
-      <p>여행 목적과 성향을 선택하면 어울리는 서핑 스타일과 국내 해변 후보를 추천합니다.</p>
+      <h1>나에게 맞는 바다를 찾아보세요</h1>
+      <p>몇 가지 취향을 고르면 오늘의 여행 스타일과 어울리는 해변을 추천해드려요.</p>
     </section>
 
-    <section class="form-panel">
-      <div class="question" data-question="mood">
-        <h2>1. 이번 여행에서 가장 원하는 분위기는?</h2>
+    <section class="form-panel" aria-label="나만의 파도 찾기 테스트">
+      <div class="step-status">
+        <span id="step-label">Step 1 / 3</span>
+        <div class="step-progress" aria-label="진행률"><span id="step-progress-bar"></span></div>
+      </div>
+
+      <div class="question is-active" data-question="mood">
+        <p class="question-kicker">Travel Mood</p>
+        <h2>이번 여행에서 가장 원하는 분위기는?</h2>
         <div class="choice-grid">
-          <button class="choice-card" data-value="active" type="button">액티브하게 즐기기</button>
-          <button class="choice-card" data-value="healing" type="button">조용히 쉬기</button>
-          <button class="choice-card" data-value="social" type="button">사람들과 어울리기</button>
+          <button class="choice-card" data-value="active" type="button">
+            <strong>액티브</strong>
+            <span>파도, 액티비티, 새로운 경험</span>
+          </button>
+          <button class="choice-card" data-value="healing" type="button">
+            <strong>힐링</strong>
+            <span>산책, 풍경, 조용한 휴식</span>
+          </button>
+          <button class="choice-card" data-value="social" type="button">
+            <strong>소셜</strong>
+            <span>강습, 핫플, 사람들과 함께</span>
+          </button>
         </div>
       </div>
 
       <div class="question" data-question="skill">
-        <h2>2. 서핑 경험은 어느 정도인가요?</h2>
+        <p class="question-kicker">Surf Level</p>
+        <h2>서핑 경험은 어느 정도인가요?</h2>
         <div class="choice-grid">
-          <button class="choice-card" data-value="beginner" type="button">처음 또는 초보</button>
-          <button class="choice-card" data-value="middle" type="button">몇 번 타봤음</button>
-          <button class="choice-card" data-value="challenge" type="button">도전적인 파도 선호</button>
+          <button class="choice-card" data-value="beginner" type="button">
+            <strong>처음이에요</strong>
+            <span>강습과 안전한 파도가 중요해요</span>
+          </button>
+          <button class="choice-card" data-value="middle" type="button">
+            <strong>몇 번 타봤어요</strong>
+            <span>적당한 파도와 분위기를 원해요</span>
+          </button>
+          <button class="choice-card" data-value="challenge" type="button">
+            <strong>도전하고 싶어요</strong>
+            <span>강한 파도와 유명 스팟 선호</span>
+          </button>
         </div>
       </div>
 
       <div class="question" data-question="place">
-        <h2>3. 선호하는 해변 환경은?</h2>
+        <p class="question-kicker">Beach Style</p>
+        <h2>선호하는 해변 환경은?</h2>
         <div class="choice-grid">
-          <button class="choice-card" data-value="city" type="button">접근성 좋은 도심형</button>
-          <button class="choice-card" data-value="nature" type="button">자연 풍경 중심</button>
-          <button class="choice-card" data-value="hotspot" type="button">유명 서핑 스팟</button>
+          <button class="choice-card" data-value="city" type="button">
+            <strong>도심형</strong>
+            <span>접근성과 편의시설이 좋아야 해요</span>
+          </button>
+          <button class="choice-card" data-value="nature" type="button">
+            <strong>자연형</strong>
+            <span>풍경과 여유가 가장 중요해요</span>
+          </button>
+          <button class="choice-card" data-value="hotspot" type="button">
+            <strong>핫스팟</strong>
+            <span>유명한 서핑 명소를 가보고 싶어요</span>
+          </button>
         </div>
       </div>
 
-      <button class="small-btn" id="result-btn" type="button">결과 보기</button>
+      <div class="form-actions">
+        <button class="secondary-btn" id="prev-btn" type="button">이전</button>
+        <button class="small-btn" id="next-btn" type="button" disabled>다음</button>
+      </div>
 
       <article class="result-card" id="result-card" hidden>
+        <p class="result-kicker">Your Wave Report</p>
         <h2 id="result-title"></h2>
         <p id="result-desc"></p>
+        <div class="keyword-row" id="keyword-row"></div>
         <div class="spot-grid" id="spot-grid"></div>
+        <div class="result-actions">
+          <a class="small-btn" href="checklist.html">체크리스트로 이동</a>
+          <button class="secondary-btn" id="restart-test-btn" type="button">다시 선택하기</button>
+        </div>
       </article>
     </section>
   </main>
