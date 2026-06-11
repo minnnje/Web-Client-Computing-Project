@@ -200,13 +200,16 @@ function updatePlayer() {
   if (player.invincible > 0) player.invincible -= 1;
 }
 
-function rectsOverlap(a, b) {
-  return (
-    a.x < b.x + b.w &&
-    a.x + a.w > b.x &&
-    a.y < b.y + b.h &&
-    a.y + a.h > b.y
-  );
+function ellipsesOverlap(a, b) {
+  const cx1 = a.x + a.w / 2;
+  const cy1 = a.y + a.h / 2;
+  const cx2 = b.x + b.w / 2;
+  const cy2 = b.y + b.h / 2;
+  const rx = a.w / 2 + b.w / 2;
+  const ry = a.h / 2 + b.h / 2;
+  const dx = cx1 - cx2;
+  const dy = cy1 - cy2;
+  return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1;
 }
 
 function updateIsles() {
@@ -214,7 +217,7 @@ function updateIsles() {
     const isle = game.isles[i];
     isle.y += isle.vy;
 
-    if (!isle.hit && player.invincible === 0 && rectsOverlap(player, isle)) {
+    if (!isle.hit && player.invincible === 0 && ellipsesOverlap(player, isle)) {
       isle.hit = true;
       game.life -= 1;
       player.invincible = 80;
@@ -254,7 +257,7 @@ function updateStamps() {
     const stamp = game.stamps[i];
     stamp.y += stamp.vy;
 
-    if (!stamp.collected && rectsOverlap(player, stamp)) {
+    if (!stamp.collected && ellipsesOverlap(player, stamp)) {
       stamp.collected = true;
       earnStampByNum(stamp.num);
     }
