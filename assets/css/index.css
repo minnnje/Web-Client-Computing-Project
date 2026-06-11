@@ -7,7 +7,7 @@ html {
     width: 100%;
     height: 200vh;
     font-family: 'Poppins', 'Pretendard', 'Noto Sans KR', Arial, sans-serif;
-    background: linear-gradient(160deg,  #01BCFF 0%, #0072FF 40%, #0025AA 80%);
+    background: linear-gradient(160deg,  #01BCFF 0%, #0072FF 60%, #0025AA 100%);
     overflow-x: hidden;
     scroll-behavior: smooth;
     transition: background 0.8s ease;
@@ -213,7 +213,7 @@ body.scrolled .content-section {
     border: none;
     border-radius: 999px;
 
-    background: linear-gradient(135deg, #22d6b8 0%, #00BBFF 100%);
+    background: #ff4a32;
     color: #071d2f;
 
     font-family: inherit;
@@ -224,8 +224,8 @@ body.scrolled .content-section {
     cursor: pointer;
 
     box-shadow:
-        0 0 18px rgba(0, 187, 255, 0.35),
-        0 10px 26px rgba(0, 187, 255, 0.28);
+        0 0 18px rgba(255, 74, 50, 0.35),
+        0 10px 26px rgba(255, 74, 50, 0.28);
 
     transition:
         transform 0.25s ease,
@@ -359,7 +359,7 @@ body.scrolled .explore-section {
 .menu-card:hover {
     transform: translateY(-10px);
     background: rgba(0, 187, 255, 0.06);
-    border-color: #00BBFF;
+    border-color: #0025aa;
     box-shadow: 0 24px 60px rgba(0, 187, 255, 0.20);
 }
 
