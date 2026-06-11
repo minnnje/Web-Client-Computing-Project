@@ -78,6 +78,7 @@ const game = {
   isles: [],
   stamps: [],
   keys: {},
+  touch: { active: false, x: 0, y: 0 },
 };
 
 const player = {
@@ -193,6 +194,18 @@ function updatePlayer() {
   if (game.keys.ArrowRight || game.keys.d || game.keys.D) player.x += player.speed;
   if (game.keys.ArrowUp || game.keys.w || game.keys.W) player.y -= player.speed;
   if (game.keys.ArrowDown || game.keys.s || game.keys.S) player.y += player.speed;
+
+  if (game.touch.active) {
+    const cx = player.x + player.w / 2;
+    const cy = player.y + player.h / 2;
+    const dx = game.touch.x - cx;
+    const dy = game.touch.y - cy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist > player.speed) {
+      player.x += (dx / dist) * player.speed;
+      player.y += (dy / dist) * player.speed;
+    }
+  }
 
   player.x = Math.max(10, Math.min(canvas.width - player.w - 10, player.x));
   player.y = Math.max(10, Math.min(canvas.height - player.h - 10, player.y));
@@ -429,26 +442,30 @@ window.addEventListener("keyup", (event) => {
   game.keys[event.key] = false;
 });
 
-function moveByTouch(event) {
+function updateTouchTarget(event) {
   const touch = event.touches[0];
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
 
-  player.x = (touch.clientX - rect.left) * scaleX - player.w / 2;
-  player.y = (touch.clientY - rect.top) * scaleY - player.h / 2;
-  player.x = Math.max(10, Math.min(canvas.width - player.w - 10, player.x));
-  player.y = Math.max(10, Math.min(canvas.height - player.h - 10, player.y));
+  game.touch.x = (touch.clientX - rect.left) * scaleX;
+  game.touch.y = (touch.clientY - rect.top) * scaleY;
+  game.touch.active = true;
 }
 
 canvas.addEventListener("touchstart", (event) => {
   event.preventDefault();
-  moveByTouch(event);
+  updateTouchTarget(event);
 });
 
 canvas.addEventListener("touchmove", (event) => {
   event.preventDefault();
-  moveByTouch(event);
+  updateTouchTarget(event);
+});
+
+canvas.addEventListener("touchend", (event) => {
+  event.preventDefault();
+  game.touch.active = false;
 });
 
 startBtn.addEventListener("click", resetGame);
