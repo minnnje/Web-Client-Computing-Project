@@ -18,15 +18,19 @@ const checkList = document.getElementById("check-list");
 const progressBar = document.getElementById("progress-bar");
 const progressCount = document.getElementById("progress-count");
 const statusMessage = document.getElementById("status-message");
+const completeBanner = document.getElementById("complete-banner");
+const confettiLayer = document.getElementById("confetti-layer");
 const newItem = document.getElementById("new-item");
 const addBtn = document.getElementById("add-btn");
 const clearDone = document.getElementById("clear-done");
 const resetBtn = document.getElementById("reset-btn");
 let currentTheme = "surf";
 let items = [];
+let wasComplete = false;
 
 function loadTheme(theme) {
   currentTheme = theme;
+  wasComplete = false;
   const saved = localStorage.getItem(`checklist-${theme}`);
   items = saved ? JSON.parse(saved) : themes[theme].items.map((text) => ({ text, done: false }));
   themeTitle.textContent = themes[theme].title;
@@ -43,6 +47,7 @@ function updateProgress() {
   const percent = Math.round((done / total) * 100);
   progressBar.style.width = `${percent}%`;
   progressCount.textContent = `${done} / ${items.length} 완료`;
+  document.body.dataset.progress = percent === 100 ? "complete" : percent >= 50 ? "half" : "start";
 
   if (items.length === 0) {
     statusMessage.textContent = "직접 필요한 준비물을 추가해보세요.";
@@ -53,6 +58,37 @@ function updateProgress() {
   } else {
     statusMessage.textContent = "완벽해요. 이제 바다로 떠나요.";
   }
+
+  const isComplete = items.length > 0 && done === items.length;
+  completeBanner.hidden = !isComplete;
+
+  if (isComplete && !wasComplete) {
+    launchConfetti();
+  }
+
+  wasComplete = isComplete;
+}
+
+function launchConfetti() {
+  confettiLayer.innerHTML = "";
+  const colors = ["#0025AA", "#0071FF", "#01BCFF", "#FF1001", "#FE958E", "#FFECD1"];
+
+  for (let i = 0; i < 28; i += 1) {
+    const piece = document.createElement("span");
+    piece.style.setProperty("--x", `${Math.random() * 100}%`);
+    piece.style.setProperty("--delay", `${Math.random() * 0.35}s`);
+    piece.style.setProperty("--rotate", `${Math.random() * 360}deg`);
+    piece.style.background = colors[i % colors.length];
+    confettiLayer.appendChild(piece);
+  }
+
+  confettiLayer.classList.remove("is-active");
+  void confettiLayer.offsetWidth;
+  confettiLayer.classList.add("is-active");
+
+  window.setTimeout(() => {
+    confettiLayer.classList.remove("is-active");
+  }, 1800);
 }
 
 function render() {

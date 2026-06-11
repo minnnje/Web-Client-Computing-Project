@@ -29,6 +29,21 @@ body {
   background:
     radial-gradient(circle at 10% 8%, rgba(23, 200, 239, 0.22), transparent 30%),
     linear-gradient(180deg, #f8fdff 0%, #eaf8ff 100%);
+  transition: background 0.45s ease;
+}
+
+body[data-progress="half"] {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(1, 188, 255, 0.30), transparent 30%),
+    radial-gradient(circle at 92% 6%, rgba(255, 236, 209, 0.38), transparent 24%),
+    linear-gradient(180deg, #f5fcff 0%, #e6f7ff 100%);
+}
+
+body[data-progress="complete"] {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(1, 188, 255, 0.26), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgba(254, 149, 142, 0.24), transparent 28%),
+    linear-gradient(180deg, #fff8ee 0%, #eaf8ff 100%);
 }
 
 a {
@@ -269,6 +284,12 @@ h1, h2, h3, p {
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 18px 46px rgba(0, 37, 170, 0.10);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+body[data-progress="complete"] .check-panel {
+  border-color: rgba(255, 16, 1, 0.18);
+  box-shadow: 0 24px 64px rgba(255, 16, 1, 0.10);
 }
 
 .check-panel-head {
@@ -300,6 +321,40 @@ h1, h2, h3, p {
   margin: 0 0 14px;
   color: var(--muted);
   font-weight: 900;
+}
+
+.complete-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0 0 16px;
+  padding: 16px 18px;
+  border: 1px solid rgba(255, 16, 1, 0.18);
+  border-radius: 8px;
+  color: var(--navy);
+  background: linear-gradient(135deg, var(--cream), rgba(254, 149, 142, 0.28));
+  animation: banner-pop 0.32s ease both;
+}
+
+.complete-banner[hidden] {
+  display: none;
+}
+
+.complete-banner strong {
+  flex: 0 0 auto;
+  color: var(--coral);
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.complete-banner span {
+  font-weight: 900;
+}
+
+@keyframes banner-pop {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .progress {
@@ -419,6 +474,7 @@ h1, h2, h3, p {
 
 .check-list li.is-done label {
   background: #f7faff;
+  border-color: rgba(1, 188, 255, 0.24);
 }
 
 .add-row {
@@ -458,6 +514,41 @@ h1, h2, h3, p {
 .reset-btn {
   color: var(--navy);
   background: var(--cream);
+}
+
+.confetti-layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.confetti-layer span {
+  position: absolute;
+  top: -24px;
+  left: var(--x);
+  width: 10px;
+  height: 16px;
+  border-radius: 3px;
+  opacity: 0;
+  transform: rotate(var(--rotate));
+}
+
+.confetti-layer.is-active span {
+  animation: confetti-fall 1.4s ease-in forwards;
+  animation-delay: var(--delay);
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--rotate));
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(105vh) rotate(calc(var(--rotate) + 360deg));
+  }
 }
 
 /* ── 900px : hero stacks ─────────────────────────────── */
