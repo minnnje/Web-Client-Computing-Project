@@ -186,6 +186,7 @@ canvas {
   padding: 24px;
   color: #ffffff;
   text-align: center;
+  border: 1px solid rgba(8, 120, 223, 0.18);
   background: rgba(7, 26, 77, 0.45);
 }
 
@@ -212,6 +213,11 @@ canvas {
   margin: 0;
   line-height: 1.6;
   font-weight: 400;
+}
+
+
+.overlay p:nth-child(2){
+  color:#20c3ef;
 }
 
 .overlay button {

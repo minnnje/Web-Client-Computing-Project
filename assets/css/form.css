@@ -126,7 +126,7 @@ h1 {
   border: 0;
   border-radius: 8px;
   color: #ffffff;
-  background: var(--blue);
+  background: #ff4a32;
   font-weight: 900;
   cursor: pointer;
 }
