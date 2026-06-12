@@ -215,14 +215,38 @@ h1, h2, h3, p {
   transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
 }
 
+.theme-btn::before,
 .theme-btn::after {
   content: "";
   position: absolute;
-  inset: auto -20% -56px -20%;
-  height: 92px;
-  border-radius: 50% 50% 0 0;
-  background: rgba(1, 188, 255, 0.15);
-  transition: transform 0.24s ease, background 0.24s ease;
+  inset: 0;
+  pointer-events: none;
+}
+
+.theme-btn::before {
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.32s ease, filter 0.32s ease;
+}
+
+.theme-btn::after {
+  z-index: 0;
+  background: linear-gradient(120deg, rgba(0, 37, 170, 0.78), rgba(0, 113, 255, 0.34) 58%, rgba(255, 236, 209, 0.18));
+  transition: background 0.24s ease;
+}
+
+.theme-btn[data-theme="surf"]::before {
+  background-image: url("../images/checklist-card-surf.png");
+}
+
+.theme-btn[data-theme="healing"]::before {
+  background-image: url("../images/checklist-card-healing.png");
+}
+
+.theme-btn[data-theme="overnight"]::before {
+  background-image: url("../images/checklist-card-stay.png");
 }
 
 .theme-btn:hover,
@@ -233,15 +257,22 @@ h1, h2, h3, p {
 }
 
 .theme-btn.is-selected {
-  background: linear-gradient(180deg, #ffffff 0%, #f0fbff 100%);
+  background: #ffffff;
+}
+
+.theme-btn:hover::before,
+.theme-btn.is-selected::before {
+  filter: saturate(1.08) contrast(1.04);
+  transform: scale(1.04);
 }
 
 .theme-btn.is-selected::after {
-  background: rgba(1, 188, 255, 0.28);
-  transform: translateY(-8px);
+  background: linear-gradient(120deg, rgba(0, 37, 170, 0.66), rgba(1, 188, 255, 0.24) 62%, rgba(255, 236, 209, 0.20));
 }
 
 .mode-icon {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -268,14 +299,16 @@ h1, h2, h3, p {
 
 .theme-btn strong {
   margin-bottom: 8px;
-  color: var(--navy);
+  color: #ffffff;
   font-size: 1.28rem;
+  text-shadow: 0 2px 10px rgba(0, 37, 170, 0.32);
 }
 
 .theme-btn em {
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.88);
   font-style: normal;
   font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0, 37, 170, 0.24);
 }
 
 .check-panel {
