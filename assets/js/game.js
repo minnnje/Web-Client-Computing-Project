@@ -1,6 +1,41 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+const gameImages = {
+  background: new Image(),
+  islandFrames: [new Image(), new Image()],
+  playerFrames: [new Image(), new Image()],
+  stampBase: new Image(),
+  stampMarks: [
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+  ],
+};
+
+gameImages.background.src = "../assets/images/game-ocean-perspective-bg.png";
+gameImages.islandFrames[0].src = "../assets/images/game-island-frame-1.png";
+gameImages.islandFrames[1].src = "../assets/images/game-island-frame-2.png";
+gameImages.playerFrames[0].src = "../assets/images/game-player-frame-1.png";
+gameImages.playerFrames[1].src = "../assets/images/game-player-frame-2.png";
+gameImages.stampBase.src = "../assets/images/stamp-base-blank.png";
+
+const stampMarkSources = [
+  "../assets/images/stamp-icon-shell.png",
+  "../assets/images/stamp-icon-clam.png",
+  "../assets/images/stamp-icon-turtle.png",
+  "../assets/images/stamp-icon-shrimp.png",
+  "../assets/images/stamp-icon-crab.png",
+  "../assets/images/stamp-icon-wave.png",
+];
+
+gameImages.stampMarks.forEach((image, index) => {
+  image.src = stampMarkSources[index];
+});
+
 const scoreText = document.getElementById("scoreText");
 const levelText = document.getElementById("levelText");
 const bestText = document.getElementById("bestText");
@@ -81,10 +116,10 @@ const game = {
 };
 
 const player = {
-  x: canvas.width / 2 - 22,
-  y: canvas.height - 92,
-  w: 44,
-  h: 68,
+  x: canvas.width / 2 - 39,
+  y: canvas.height - 118,
+  w: 78,
+  h: 104,
   speed: 5.5,
   invincible: 0,
 };
@@ -102,20 +137,25 @@ function fallbackBeachArt() {
 function renderBeachDex() {
   beachGrid.innerHTML = "";
 
-  beaches.forEach((beach) => {
+  beaches.forEach((beach, index) => {
     const isUnlocked = unlockedStampIds.includes(beach.id);
     const card = document.createElement("article");
     card.className = `beach-card ${isUnlocked ? "" : "locked"}`;
 
     if (isUnlocked) {
+      const markSrc = stampMarkSources[index % stampMarkSources.length];
+
       card.innerHTML = `
         <img class="beach-art" src="${beach.image}" alt="${beach.name}">
-        <div class="stamp">stamp</div>
+        <div class="stamp dex-stamp" aria-label="획득 스탬프">
+          <img class="stamp-base" src="../assets/images/stamp-base-blank.png" alt="">
+          <img class="stamp-mark" src="${markSrc}" alt="">
+        </div>
         <h3>${beach.name}</h3>
         <p><strong>${beach.region}</strong> · ${beach.info}</p>
       `;
 
-      const img = card.querySelector("img");
+      const img = card.querySelector("img.beach-art");
       img.addEventListener("error", () => {
         img.outerHTML = fallbackBeachArt();
       });
@@ -141,7 +181,7 @@ function resetGame() {
   game.stamps = [];
 
   player.x = canvas.width / 2 - player.w / 2;
-  player.y = canvas.height - 92;
+  player.y = canvas.height - 118;
   player.invincible = 0;
 
   startOverlay.classList.add("hidden");
@@ -159,31 +199,51 @@ function updateInfo() {
 
 function spawnIsle() {
   const sizes = [
-    { w: 72, h: 58 },
-    { w: 100, h: 82 },
-    { w: 132, h: 106 },
+    { w: 96, h: 96 },
+    { w: 116, h: 116 },
+    { w: 136, h: 136 },
   ];
-  const { w, h } = sizes[Math.floor(Math.random() * sizes.length)];
-  const randomType = Math.random();
-  let color = "#fff0cd";
-  let detail = "#2aab60";
 
-  if (randomType < 0.33) {
-    color = "#ffe0a3";
-    detail = "#138b56";
-  } else if (randomType < 0.66) {
-    color = "#ffd28a";
-    detail = "#196f3d";
-  }
+  const { w: baseW, h: baseH } = sizes[Math.floor(Math.random() * sizes.length)];
+  const startScale = 0.40 + Math.random() * 0.08;
+  const startW = baseW * startScale;
+  const startH = baseH * startScale;
+
+  // 6개 레인: 좌/중앙/우측 수직 레인 + 좌우 사선 레인.
+  // start는 화면 위쪽 생성 위치, end는 플레이어 근처 도착 위치 비율이다.
+  const lanes = [
+    { start: 0.36, end: 0.18 },
+    { start: 0.43, end: 0.34 },
+    { start: 0.49, end: 0.49 },
+    { start: 0.57, end: 0.64 },
+    { start: 0.64, end: 0.78 },
+    { start: 0.72, end: 0.92 },
+  ];
+
+  const laneIndex = Math.floor(Math.random() * lanes.length);
+  const lane = lanes[laneIndex];
+
+  const topJitter = (Math.random() - 0.5) * canvas.width * 0.045;
+  const bottomJitter = (Math.random() - 0.5) * canvas.width * 0.055;
+
+  const startCenterX = canvas.width * lane.start + topJitter;
+  const endCenterX = canvas.width * lane.end + bottomJitter;
 
   game.isles.push({
-    x: Math.random() * (canvas.width - w),
-    y: -h - Math.random() * 120,
-    w,
-    h,
-    vy: 2.4 + game.level * 0.28 + Math.random() * 1.2,
-    color,
-    detail,
+    x: startCenterX - startW / 2,
+    y: -startH - Math.random() * 80,
+    startCenterX,
+    endCenterX,
+    cx: startCenterX,
+    laneIndex,
+    baseW,
+    baseH,
+    w: startW,
+    h: startH,
+    vy: 2.35 + game.level * 0.22 + Math.random() * 0.42,
+    vx: 0,
+    frameOffset: Math.floor(Math.random() * 20),
+    rotation: (Math.random() - 0.5) * 0.12,
     hit: false,
   });
 }
@@ -194,27 +254,92 @@ function updatePlayer() {
   if (game.keys.ArrowUp || game.keys.w || game.keys.W) player.y -= player.speed;
   if (game.keys.ArrowDown || game.keys.s || game.keys.S) player.y += player.speed;
 
-  player.x = Math.max(10, Math.min(canvas.width - player.w - 10, player.x));
-  player.y = Math.max(10, Math.min(canvas.height - player.h - 10, player.y));
+  clampPlayerPosition();
 
   if (player.invincible > 0) player.invincible -= 1;
 }
 
-function rectsOverlap(a, b) {
-  return (
-    a.x < b.x + b.w &&
-    a.x + a.w > b.x &&
-    a.y < b.y + b.h &&
-    a.y + a.h > b.y
-  );
+function ellipsesOverlap(a, b) {
+  const cx1 = a.x + a.w / 2;
+  const cy1 = a.y + a.h / 2;
+  const cx2 = b.x + b.w / 2;
+  const cy2 = b.y + b.h / 2;
+  const rx = a.w / 2 + b.w / 2;
+  const ry = a.h / 2 + b.h / 2;
+  const dx = cx1 - cx2;
+  const dy = cy1 - cy2;
+  return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1;
 }
 
+
+function getPlayerBounds() {
+  return {
+    minX: 10,
+    maxX: canvas.width - player.w - 10,
+    minY: canvas.height * 0.50,
+    maxY: canvas.height - player.h - 10,
+  };
+}
+
+function clampPlayerPosition() {
+  const bounds = getPlayerBounds();
+  player.x = Math.max(bounds.minX, Math.min(bounds.maxX, player.x));
+  player.y = Math.max(bounds.minY, Math.min(bounds.maxY, player.y));
+}
+
+
 function updateIsles() {
+  const applyPerspective = (isle) => {
+    const perspectiveProgress = Math.max(0, Math.min(1, (isle.y + isle.baseH * 0.35) / canvas.height));
+    const easedProgress = perspectiveProgress * perspectiveProgress * (3 - 2 * perspectiveProgress);
+    const scale = 0.42 + perspectiveProgress * 1.18;
+
+    isle.w = isle.baseW * scale;
+    isle.h = isle.baseH * scale;
+
+    // 레인 시작점에서 도착점으로 부드럽게 보간해서 사선/수직 경로를 만든다.
+    const startX = isle.startCenterX ?? isle.cx;
+    const endX = isle.endCenterX ?? isle.cx;
+    isle.cx = startX + (endX - startX) * easedProgress;
+
+    // 화면 끝에서 튕기지 않도록 x 보정을 하지 않는다.
+    // 레인 도착점이 화면 밖에 있으면 그대로 화면 밖으로 빠져나간다.
+    isle.x = isle.cx - isle.w / 2;
+  };
+
+  game.isles.forEach((isle) => {
+    isle.y += isle.vy;
+    applyPerspective(isle);
+  });
+
+  // 같은 레인 안에서만 뒤 섬이 앞 섬을 추월하지 못하게 한다.
+  const minGap = 84;
+  const laneGroups = new Map();
+
+  game.isles.forEach((isle) => {
+    const key = isle.laneIndex ?? 0;
+    if (!laneGroups.has(key)) laneGroups.set(key, []);
+    laneGroups.get(key).push(isle);
+  });
+
+  laneGroups.forEach((laneIsles) => {
+    laneIsles.sort((a, b) => b.y - a.y); // 더 아래쪽에 있는 섬이 앞 섬
+    for (let i = 1; i < laneIsles.length; i += 1) {
+      const frontIsle = laneIsles[i - 1];
+      const backIsle = laneIsles[i];
+
+      if (backIsle.y > frontIsle.y - minGap) {
+        backIsle.y = frontIsle.y - minGap;
+        backIsle.vy = Math.min(backIsle.vy, frontIsle.vy);
+        applyPerspective(backIsle);
+      }
+    }
+  });
+
   for (let i = game.isles.length - 1; i >= 0; i -= 1) {
     const isle = game.isles[i];
-    isle.y += isle.vy;
 
-    if (!isle.hit && player.invincible === 0 && rectsOverlap(player, isle)) {
+    if (!isle.hit && player.invincible === 0 && ellipsesOverlap(player, isle)) {
       isle.hit = true;
       game.life -= 1;
       player.invincible = 80;
@@ -225,26 +350,46 @@ function updateIsles() {
       }
     }
 
-    if (isle.y > canvas.height + 40) {
+    if (
+      isle.y > canvas.height + isle.h + 40 ||
+      isle.x > canvas.width + isle.w + 80 ||
+      isle.x + isle.w < -isle.w - 80
+    ) {
       game.isles.splice(i, 1);
     }
   }
 }
 
 function spawnStamp() {
-  const size = 48;
   const locked = beaches.filter((beach) => !unlockedStampIds.includes(beach.id));
   if (locked.length === 0) return;
 
   const beach = locked[Math.floor(Math.random() * locked.length)];
   const num = beaches.indexOf(beach) + 1;
+
+  const baseW = 64;
+  const baseH = 64;
+  const startScale = 0.36 + Math.random() * 0.10;
+  const startW = baseW * startScale;
+  const startH = baseH * startScale;
+
+  const centerX = canvas.width * 0.5;
+  const laneHalfWidth = Math.min(115, canvas.width * 0.27);
+  const topSpread = laneHalfWidth * 0.55;
+  const startCenterX = centerX + (Math.random() - 0.5) * topSpread;
+
   game.stamps.push({
-    x: Math.random() * (canvas.width - size),
-    y: -size - 10,
-    w: size,
-    h: size,
-    vy: 2.2 + Math.random() * 0.8,
+    x: startCenterX - startW / 2,
+    y: -startH - Math.random() * 90,
+    cx: startCenterX,
+    baseW,
+    baseH,
+    w: startW,
+    h: startH,
+    vy: 2.15 + game.level * 0.20 + Math.random() * 0.75,
+    vx: 0,
     num,
+    rotation: (Math.random() - 0.5) * 0.24,
     collected: false,
   });
 }
@@ -252,14 +397,28 @@ function spawnStamp() {
 function updateStamps() {
   for (let i = game.stamps.length - 1; i >= 0; i -= 1) {
     const stamp = game.stamps[i];
+
     stamp.y += stamp.vy;
 
-    if (!stamp.collected && rectsOverlap(player, stamp)) {
+    const perspectiveProgress = Math.max(0, Math.min(1, (stamp.y + stamp.baseH * 0.3) / canvas.height));
+    const scale = 0.36 + perspectiveProgress * 0.88;
+
+    stamp.w = stamp.baseW * scale;
+    stamp.h = stamp.baseH * scale;
+    stamp.cx += stamp.vx;
+
+    const laneHalfWidth = Math.min(115, canvas.width * 0.27);
+    const minCenterX = canvas.width * 0.5 - laneHalfWidth + stamp.w / 2;
+    const maxCenterX = canvas.width * 0.5 + laneHalfWidth - stamp.w / 2;
+    stamp.cx = Math.max(minCenterX, Math.min(maxCenterX, stamp.cx));
+    stamp.x = stamp.cx - stamp.w / 2;
+
+    if (!stamp.collected && ellipsesOverlap(player, stamp)) {
       stamp.collected = true;
       earnStampByNum(stamp.num);
     }
 
-    if (stamp.y > canvas.height + 40 || stamp.collected) {
+    if (stamp.y > canvas.height + stamp.h + 40 || stamp.collected) {
       game.stamps.splice(i, 1);
     }
   }
@@ -271,7 +430,10 @@ function updateGame() {
   game.level = Math.floor(game.score / 450) + 1;
 
   const spawnInterval = Math.max(22, 60 - game.level * 4);
-  if (game.frame % spawnInterval === 0) spawnIsle();
+  const maxIsles = game.level >= 3 ? 5 : 4;
+  if (game.isles.length < maxIsles && game.frame % spawnInterval === 0) {
+    spawnIsle();
+  }
   if (game.frame % 300 === 0) spawnStamp();
 
   updatePlayer();
@@ -280,106 +442,157 @@ function updateGame() {
   updateInfo();
 }
 
-function drawBackground() {
-  const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  sky.addColorStop(0, "#11bff0");
-  sky.addColorStop(0.55, "#20c3ef");
-  sky.addColorStop(1, "#0878df");
-  ctx.fillStyle = sky;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.65)";
-  ctx.lineWidth = 3;
-  for (let i = 0; i < 7; i += 1) {
-    const y = (game.frame * 1.2 + i * 98) % (canvas.height + 120) - 80;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    for (let x = 0; x <= canvas.width; x += 40) {
-      ctx.quadraticCurveTo(x + 20, y + 15, x + 40, y);
-    }
-    ctx.stroke();
+function drawCoverImage(image, x, y, width, height) {
+  if (!image.complete || image.naturalWidth === 0) return false;
+
+  const imageRatio = image.naturalWidth / image.naturalHeight;
+  const targetRatio = width / height;
+
+  let sx = 0;
+  let sy = 0;
+  let sw = image.naturalWidth;
+  let sh = image.naturalHeight;
+
+  if (imageRatio > targetRatio) {
+    sw = image.naturalHeight * targetRatio;
+    sx = (image.naturalWidth - sw) / 2;
+  } else {
+    sh = image.naturalWidth / targetRatio;
+    sy = (image.naturalHeight - sh) / 2;
+  }
+
+  ctx.drawImage(image, sx, sy, sw, sh, x, y, width, height);
+  return true;
+}
+
+function drawContainImage(image, x, y, width, height, rotation = 0) {
+  if (!image.complete || image.naturalWidth === 0) return false;
+
+  const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+  const drawW = image.naturalWidth * scale;
+  const drawH = image.naturalHeight * scale;
+
+  ctx.save();
+  ctx.translate(x + width / 2, y + height / 2);
+  ctx.rotate(rotation);
+  ctx.drawImage(image, -drawW / 2, -drawH / 2, drawW, drawH);
+  ctx.restore();
+
+  return true;
+}
+
+function drawBackground() {
+  const hasBackgroundImage = drawCoverImage(gameImages.background, 0, 0, canvas.width, canvas.height);
+
+  if (!hasBackgroundImage) {
+    const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    sky.addColorStop(0, "#114fcf");
+    sky.addColorStop(0.58, "#088df1");
+    sky.addColorStop(1, "#11c4ec");
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 }
 
 function drawPlayer() {
   ctx.save();
   ctx.globalAlpha = player.invincible > 0 && game.frame % 8 < 4 ? 0.45 : 1;
-  ctx.translate(player.x + player.w / 2, player.y + player.h / 2);
-  ctx.rotate(-0.22);
 
-  ctx.fillStyle = "#ff3b23";
-  ctx.beginPath();
-  ctx.ellipse(0, 0, player.w / 2, player.h / 2, 0, 0, Math.PI * 2);
-  ctx.fill();
+  const frameIndex = Math.floor(game.frame / 10) % gameImages.playerFrames.length;
+  const playerImage = gameImages.playerFrames[frameIndex];
 
-  ctx.fillStyle = "#fff2d4";
-  ctx.beginPath();
-  ctx.ellipse(0, 0, player.w / 4, player.h / 2.5, 0, 0, Math.PI * 2);
-  ctx.fill();
+  const drewImage = drawContainImage(
+    playerImage,
+    player.x - player.w * 0.28,
+    player.y - player.h * 0.20,
+    player.w * 1.56,
+    player.h * 1.38,
+    -0.03
+  );
 
-  ctx.fillStyle = "#071a4d";
-  ctx.beginPath();
-  ctx.arc(0, -8, 8, 0, Math.PI * 2);
-  ctx.fill();
+  if (!drewImage) {
+    ctx.translate(player.x + player.w / 2, player.y + player.h / 2);
+    ctx.rotate(-0.22);
 
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(-6, 2, 12, 24);
+    ctx.fillStyle = "#ff3b23";
+    ctx.beginPath();
+    ctx.ellipse(0, 0, player.w / 2, player.h / 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
   ctx.restore();
 }
 
 function drawIsle(isle) {
   ctx.save();
-  ctx.translate(isle.x + isle.w / 2, isle.y + isle.h / 2);
 
-  ctx.fillStyle = isle.hit ? "#ff938d" : isle.color;
-  ctx.beginPath();
-  ctx.ellipse(0, 0, isle.w / 2, isle.h / 2, 0, 0, Math.PI * 2);
-  ctx.fill();
+  if (isle.hit) {
+    ctx.globalAlpha = 0.62;
+  }
 
-  ctx.fillStyle = isle.detail;
-  ctx.beginPath();
-  ctx.ellipse(-isle.w * 0.12, -isle.h * 0.08, isle.w * 0.18, isle.h * 0.16, 0, 0, Math.PI * 2);
-  ctx.ellipse(isle.w * 0.18, isle.h * 0.05, isle.w * 0.14, isle.h * 0.12, 0, 0, Math.PI * 2);
-  ctx.fill();
+  const frameIndex = Math.floor((game.frame + (isle.frameOffset || 0)) / 12) % gameImages.islandFrames.length;
+  const islandImage = gameImages.islandFrames[frameIndex];
 
-  ctx.strokeStyle = "rgba(7, 26, 77, 0.35)";
-  ctx.lineWidth = 3;
-  ctx.stroke();
+  const drewImage = drawContainImage(
+    islandImage,
+    isle.x - isle.w * 0.08,
+    isle.y - isle.h * 0.10,
+    isle.w * 1.16,
+    isle.h * 1.20,
+    isle.rotation || 0
+  );
+
+  if (!drewImage) {
+    ctx.translate(isle.x + isle.w / 2, isle.y + isle.h / 2);
+    ctx.fillStyle = isle.hit ? "#ff938d" : "#ffe0a3";
+    ctx.beginPath();
+    ctx.ellipse(0, 0, isle.w / 2, isle.h / 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
   ctx.restore();
 }
 
 function drawStamp(stamp) {
-  const r = stamp.w / 2;
   ctx.save();
-  ctx.translate(stamp.x + r, stamp.y + r);
 
-  ctx.fillStyle = "#d0021b";
-  ctx.beginPath();
-  ctx.arc(0, 0, r, 0, Math.PI * 2);
-  ctx.fill();
+  const rotation = stamp.rotation || 0;
 
-  ctx.strokeStyle = "rgba(255,255,255,0.7)";
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(0, 0, r - 5, 0, Math.PI * 2);
-  ctx.stroke();
+  const baseDrawn = drawContainImage(
+    gameImages.stampBase,
+    stamp.x,
+    stamp.y,
+    stamp.w,
+    stamp.h,
+    rotation
+  );
 
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+  if (!baseDrawn) {
+    const r = stamp.w / 2;
+    ctx.translate(stamp.x + r, stamp.y + r);
+    ctx.rotate(rotation);
 
-  ctx.font = "bold 11px sans-serif";
-  ctx.fillText("stamp", 0, -6);
+    ctx.fillStyle = "#fff2d4";
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fill();
 
-  ctx.font = "bold 13px sans-serif";
-  ctx.fillText(`#${stamp.num}`, 0, 8);
+    ctx.strokeStyle = "#ff4a32";
+    ctx.lineWidth = Math.max(2, r * 0.08);
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.78, 0, Math.PI * 2);
+    ctx.stroke();
+  }
 
   ctx.restore();
 }
 
 function drawGame() {
   drawBackground();
-  game.isles.forEach(drawIsle);
+
+  [...game.isles].reverse().forEach(drawIsle);
+
   game.stamps.forEach(drawStamp);
   drawPlayer();
 }
@@ -434,8 +647,7 @@ function moveByTouch(event) {
 
   player.x = (touch.clientX - rect.left) * scaleX - player.w / 2;
   player.y = (touch.clientY - rect.top) * scaleY - player.h / 2;
-  player.x = Math.max(10, Math.min(canvas.width - player.w - 10, player.x));
-  player.y = Math.max(10, Math.min(canvas.height - player.h - 10, player.y));
+  clampPlayerPosition();
 }
 
 canvas.addEventListener("touchstart", (event) => {
