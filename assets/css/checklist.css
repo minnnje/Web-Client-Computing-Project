@@ -233,7 +233,7 @@ h1, h2, h3, p {
 
 .theme-btn::after {
   z-index: 0;
-  background: linear-gradient(120deg, rgba(0, 37, 170, 0.78), rgba(0, 113, 255, 0.34) 58%, rgba(255, 236, 209, 0.18));
+  background: transparent;
   transition: background 0.24s ease;
 }
 
@@ -267,7 +267,7 @@ h1, h2, h3, p {
 }
 
 .theme-btn.is-selected::after {
-  background: linear-gradient(120deg, rgba(0, 37, 170, 0.66), rgba(1, 188, 255, 0.24) 62%, rgba(255, 236, 209, 0.20));
+  background: transparent;
 }
 
 .mode-icon {
@@ -299,16 +299,14 @@ h1, h2, h3, p {
 
 .theme-btn strong {
   margin-bottom: 8px;
-  color: #ffffff;
+  color: var(--navy);
   font-size: 1.28rem;
-  text-shadow: 0 2px 10px rgba(0, 37, 170, 0.32);
 }
 
 .theme-btn em {
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--navy);
   font-style: normal;
   font-weight: 800;
-  text-shadow: 0 2px 10px rgba(0, 37, 170, 0.24);
 }
 
 .check-panel {
