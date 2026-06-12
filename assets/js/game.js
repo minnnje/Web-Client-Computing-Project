@@ -36,16 +36,6 @@ gameImages.stampMarks.forEach((image, index) => {
   image.src = stampMarkSources[index];
 });
 
-gameImages.islandFrames.forEach((image, index) => {
-  image.addEventListener("load", () => {
-    gameImages.islandFrames[index] = createTransparentIslandImage(image);
-  });
-
-  if (image.complete && image.naturalWidth > 0) {
-    gameImages.islandFrames[index] = createTransparentIslandImage(image);
-  }
-});
-
 const scoreText = document.getElementById("scoreText");
 const levelText = document.getElementById("levelText");
 const bestText = document.getElementById("bestText");
@@ -123,7 +113,6 @@ const game = {
   isles: [],
   stamps: [],
   keys: {},
-  touch: { active: false, x: 0, y: 0 },
 };
 
 const player = {
@@ -265,18 +254,6 @@ function updatePlayer() {
   if (game.keys.ArrowUp || game.keys.w || game.keys.W) player.y -= player.speed;
   if (game.keys.ArrowDown || game.keys.s || game.keys.S) player.y += player.speed;
 
-  if (game.touch.active) {
-    const cx = player.x + player.w / 2;
-    const cy = player.y + player.h / 2;
-    const dx = game.touch.x - cx;
-    const dy = game.touch.y - cy;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist > player.speed) {
-      player.x += (dx / dist) * player.speed;
-      player.y += (dy / dist) * player.speed;
-    }
-  }
-
   clampPlayerPosition();
 
   if (player.invincible > 0) player.invincible -= 1;
@@ -292,15 +269,6 @@ function ellipsesOverlap(a, b) {
   const dx = cx1 - cx2;
   const dy = cy1 - cy2;
   return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1;
-}
-
-function getIsleHitbox(isle) {
-  return {
-    x: isle.x + isle.w * 0.15,
-    y: isle.y + isle.h * 0.20,
-    w: isle.w * 0.70,
-    h: isle.h * 0.62,
-  };
 }
 
 
@@ -371,7 +339,7 @@ function updateIsles() {
   for (let i = game.isles.length - 1; i >= 0; i -= 1) {
     const isle = game.isles[i];
 
-    if (!isle.hit && player.invincible === 0 && ellipsesOverlap(player, getIsleHitbox(isle))) {
+    if (!isle.hit && player.invincible === 0 && ellipsesOverlap(player, isle)) {
       isle.hit = true;
       game.life -= 1;
       player.invincible = 80;
@@ -499,13 +467,11 @@ function drawCoverImage(image, x, y, width, height) {
 }
 
 function drawContainImage(image, x, y, width, height, rotation = 0) {
-  const imageWidth = image.naturalWidth || image.width || 0;
-  const imageHeight = image.naturalHeight || image.height || 0;
-  if (!image || image.complete === false || imageWidth === 0 || imageHeight === 0) return false;
+  if (!image.complete || image.naturalWidth === 0) return false;
 
-  const scale = Math.min(width / imageWidth, height / imageHeight);
-  const drawW = imageWidth * scale;
-  const drawH = imageHeight * scale;
+  const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+  const drawW = image.naturalWidth * scale;
+  const drawH = image.naturalHeight * scale;
 
   ctx.save();
   ctx.translate(x + width / 2, y + height / 2);
@@ -514,31 +480,6 @@ function drawContainImage(image, x, y, width, height, rotation = 0) {
   ctx.restore();
 
   return true;
-}
-
-function createTransparentIslandImage(image) {
-  const offscreen = document.createElement("canvas");
-  offscreen.width = image.naturalWidth;
-  offscreen.height = image.naturalHeight;
-
-  const offscreenCtx = offscreen.getContext("2d");
-  offscreenCtx.drawImage(image, 0, 0);
-
-  const imageData = offscreenCtx.getImageData(0, 0, offscreen.width, offscreen.height);
-  const { data } = imageData;
-
-  for (let i = 0; i < data.length; i += 4) {
-    const red = data[i];
-    const green = data[i + 1];
-    const blue = data[i + 2];
-
-    if (red < 38 && green < 38 && blue < 38) {
-      data[i + 3] = 0;
-    }
-  }
-
-  offscreenCtx.putImageData(imageData, 0, 0);
-  return offscreen;
 }
 
 function drawBackground() {
@@ -617,7 +558,6 @@ function drawStamp(stamp) {
   ctx.save();
 
   const rotation = stamp.rotation || 0;
-  const markImage = gameImages.stampMarks[(stamp.num - 1) % gameImages.stampMarks.length];
 
   const baseDrawn = drawContainImage(
     gameImages.stampBase,
@@ -627,17 +567,6 @@ function drawStamp(stamp) {
     stamp.h,
     rotation
   );
-
-  if (baseDrawn) {
-    drawContainImage(
-      markImage,
-      stamp.x + stamp.w * 0.25,
-      stamp.y + stamp.h * 0.25,
-      stamp.w * 0.50,
-      stamp.h * 0.50,
-      rotation
-    );
-  }
 
   if (!baseDrawn) {
     const r = stamp.w / 2;
@@ -710,30 +639,25 @@ window.addEventListener("keyup", (event) => {
   game.keys[event.key] = false;
 });
 
-function updateTouchTarget(event) {
+function moveByTouch(event) {
   const touch = event.touches[0];
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
 
-  game.touch.x = (touch.clientX - rect.left) * scaleX;
-  game.touch.y = (touch.clientY - rect.top) * scaleY;
-  game.touch.active = true;
+  player.x = (touch.clientX - rect.left) * scaleX - player.w / 2;
+  player.y = (touch.clientY - rect.top) * scaleY - player.h / 2;
+  clampPlayerPosition();
 }
 
 canvas.addEventListener("touchstart", (event) => {
   event.preventDefault();
-  updateTouchTarget(event);
+  moveByTouch(event);
 });
 
 canvas.addEventListener("touchmove", (event) => {
   event.preventDefault();
-  updateTouchTarget(event);
-});
-
-canvas.addEventListener("touchend", (event) => {
-  event.preventDefault();
-  game.touch.active = false;
+  moveByTouch(event);
 });
 
 startBtn.addEventListener("click", resetGame);
